@@ -1,0 +1,30 @@
+.mainNav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 10;
+    left: 0;
+    right: 0;
+    z-index: 100;
+}
+
+.nameDash {
+    font-size: 64px;  
+    margin: 0 14px; 
+    transform: translate(0, -5px);
+    color: #F0F0F0;
+}
+
+.name{
+    font-size: 36px;
+    font-family: 'Roboto Mono', monospace;
+    color: #F0F0F0;
+}
+
+.codev{
+    display: flex;
+    align-items: center;
+}
