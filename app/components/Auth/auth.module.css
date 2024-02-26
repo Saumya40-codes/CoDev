@@ -2,8 +2,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 295px;
-    height: 75px;
+    width: 195px;
+    height: 60px;
     border-radius: 18px;
     background-color: #F0F0F0;
     color: #000000;
@@ -24,8 +24,8 @@
 }
 
 .signinBtn img{
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
 }
 
 
@@ -42,5 +42,9 @@
     .signinBtn img{
         width: 20px;
         height: 20px;
+    }
+
+    .signinBtn span{
+        margin-right: 10px;
     }
 }
