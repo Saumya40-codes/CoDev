@@ -2,13 +2,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
+    padding: 8px 25px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     position: fixed;
-    top: 10;
+    top: 0;
     left: 0;
     right: 0;
     z-index: 100;
+    background-color: #0A0909;
 }
 
 .nameDash {
@@ -27,4 +28,33 @@
 .codev{
     display: flex;
     align-items: center;
+    margin-left: 20px;
+}
+
+.codevLogo{
+    width:100px;
+    height:100px;
+}
+
+
+@media screen and (max-width: 800px){
+
+    .mainNav{
+        padding: 8px 10px;
+    }
+
+    .nameDash {
+        font-size: 40px;
+    }
+    .name{
+        font-size: 24px;
+    }
+    .codev{
+        margin-left: 5px;
+    }
+
+    .codevLogo{
+        width: 50px;
+        height: 50px;
+    }
 }

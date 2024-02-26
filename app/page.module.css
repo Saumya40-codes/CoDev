@@ -1,3 +1,4 @@
-main {
-    background-color: #0A0909;
+.mainContent {
+    background-color: #0A0909 !important;
+    height: 100vh;
 }

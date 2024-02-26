@@ -4,7 +4,7 @@ import Navbar from "./components/MainPage/Navbar/Navbar";
 
 export default function Home() {
   return (
-    <main>
+    <main className={styles.mainContent}>
       <Navbar />
       <Contents />
     </main>

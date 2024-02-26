@@ -6,7 +6,7 @@ const Contents = () => {
     <div>
         <div className={styles.mainContent}>
             <span>
-                Do your coding work all Together
+                Do your coding work all <span className={styles.diff}>Together</span>
             </span>
             <button className={styles.mainButton}>
                 Get Started
