@@ -1,32 +1,25 @@
 'use client'
 
-import React from 'react'
-import styles from './auth.module.css'
-import { signIn } from 'next-auth/react'
+import React from 'react';
+import styles from './auth.module.css';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 const Auth = () => {
+  const router = useRouter();
 
-    const router = useRouter();
+  const handleSignInGoogle = async () => {
+    try {
+        
+        const res = await signIn('google', {
+            redirect: false,
+        });
 
-    const handleSignInGoogle = async() => {
-        try{
-            const res = await signIn('google',{
-                redirect: false,
-            })
-    
-            if(res && !res.error){
-                router.push('/Editor')
-            }
-    
-            if(res?.error){
-                console.log(res.error)
-            }
-        }
-        catch(err){
-            console.log(err)
-        }
     }
+    catch (err) {
+        console.log(err);
+    }
+  };
 
   return (
     <div>

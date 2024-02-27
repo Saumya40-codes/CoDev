@@ -3,9 +3,9 @@ import logo from '../../../../styles/images/logo.png'
 import styles from './navbar.module.css'
 import Link from 'next/link'
 import Auth from '../../Auth/Auth'
+import Profile from '../Profile/Profile'
 import { getServerSession } from "next-auth";
-import { authConfig } from '@/app/lib/auth/auth'
-import { Avatar, AvatarBadge, AvatarGroup } from '@chakra-ui/react'
+import { authConfig } from '@/app/lib/auth/auth';
 
 const Navbar = async() => {
 
@@ -25,11 +25,7 @@ const Navbar = async() => {
         </span>
       </div>
       <div className={styles.btns}>
-        {!session ? <Auth/>:(
-            <div>
-                <img src={session.user?.image || ''} className={styles.avatar} />
-            </div>
-        )}
+        {!session ? <Auth/>: <Profile session={session}/>}
       </div>
     </div>
   )
