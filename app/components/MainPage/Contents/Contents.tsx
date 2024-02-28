@@ -9,7 +9,7 @@ const Contents = () => {
             <span>
                 Do your coding work all <span className={styles.diff}>Together</span>
             </span>
-            <Link href="/Editor">
+            <Link href="/dashboard">
             <button className={styles.mainButton}>
                 Get Started
             </button>
