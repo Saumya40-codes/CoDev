@@ -1,0 +1,7 @@
+.folders{
+    display: flex;
+    justify-content: center;
+    width: 350px;
+    height: 100vh;
+    border: 1px solid #000;
+}
