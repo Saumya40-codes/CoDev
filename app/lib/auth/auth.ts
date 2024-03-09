@@ -1,6 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaClient } from "@prisma/client";
+import { cookies } from "next/headers";
 
 const prisma = new PrismaClient();
 
@@ -20,16 +21,24 @@ export const authConfig: NextAuthOptions = {
                     }
                 });
                 if(Existinguser){
+                    if(cookies().get('userId') === undefined){
+                        cookies().set('userId', Existinguser.id);
+                    }
                     return true;
                 }
                 else{
-                    await prisma.user.create({
+                    const newUser = await prisma.user.create({
                         data:{
                             email: user.email as string,
                             name: user.name as string,
                             image: user.image as string
                         }
                     });
+
+                    if(cookies().get('userId') === undefined){
+                        cookies().set('userId', newUser.id);
+                    }
+
                     return true;
                 }
             }

@@ -16,10 +16,19 @@ import {
   PopoverAnchor,
 } from '@chakra-ui/react'
 
+import { useCookies } from 'next-client-cookies';
+
 const Profile = ({ session }: { session: Session }) => {
+  const cookies = useCookies();
 
   const handleSignOut = async() => {
-    await signOut();
+    try{
+      await signOut();
+      cookies.remove('userId');
+    }
+    catch(err){
+      console.error(err);
+    }
   }
 
   return (
