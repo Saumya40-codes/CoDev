@@ -1,9 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { PrismaClient } from "@prisma/client";
 import { cookies } from "next/headers";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/prisma/prisma";
 
 export const authConfig: NextAuthOptions = {
     providers: [
