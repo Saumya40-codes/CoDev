@@ -1,8 +1,40 @@
-import React from 'react'
+'use client'
+
+import React, { useState } from 'react'
 import styles from './createproject.module.css'
 import { CloseIcon } from '@chakra-ui/icons'
+import { useCookies } from 'next-client-cookies';
+import { useRouter } from 'next/navigation';
 
 const CreateProject = ({setCreateProject}:{setCreateProject:React.Dispatch<React.SetStateAction<boolean>>}) => {
+    const cookies = useCookies();
+    const userId = cookies.get('userId');
+    const router = useRouter();
+
+    const [projectName, setProjectName] = useState<string>('');
+
+    const handleCreateProject = async() => {
+        try{
+            const res = await fetch('/api/projects/newProject',{
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: projectName,
+                    userId
+                })
+            });
+
+            const data = await res.json();
+            const newProjUrl = `/project/${data.id}`;
+            router.push(newProjUrl);
+        }
+        catch(err){
+            console.error(err);
+        }
+    }
+
   return (
     <div className={styles.projnew}>
         <div className={styles.projmain}>
@@ -13,10 +45,10 @@ const CreateProject = ({setCreateProject}:{setCreateProject:React.Dispatch<React
                 <span>
                     Project Name
                 </span>
-                <input type="text" placeholder="Enter Here..." className={styles.projnewInput} />
+                <input type="text" placeholder="Enter Here..." className={styles.projnewInput} onChange={(e)=>setProjectName(e.target.value)} />
             </div>
             <div className={styles.projnewBtn}>
-            <button className={styles.projBtn}>
+            <button className={styles.projBtn} onClick={handleCreateProject}>
                 Go
             </button>
             </div>
