@@ -5,7 +5,7 @@ const Folder = () => {
   return (
     <div className={styles.folders}>
       <div>
-
+        Project Name
       </div>
     </div>
   )

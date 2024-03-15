@@ -1,4 +1,6 @@
 .mainContent {
-    background-color: #0A0909 !important;
     height: 100vh;
+    background: #0A0909;
+    display: flex;
+    flex-direction: column;
 }

@@ -4,11 +4,10 @@
     align-items: center;
     padding: 8px 25px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 100;
     background-color: transparent;
 }
 

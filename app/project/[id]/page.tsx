@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './project.module.css'
 import Navbar from '@/app/components/MainPage/Navbar/Navbar'
+import Folder from '@/app/components/Folder/Folder'
 
 const project = ({ params }: { params: { id: string } }) => {
   return (
@@ -10,7 +11,7 @@ const project = ({ params }: { params: { id: string } }) => {
       </div>
       <hr className={styles.ruler} />
       <div className={styles.projContent}>
-        <h1>Project {params.id}</h1>
+        <Folder/>
       </div>
     </div>
   )

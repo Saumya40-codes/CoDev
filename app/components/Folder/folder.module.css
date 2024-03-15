@@ -1,7 +1,7 @@
 .folders{
-    display: flex;
-    justify-content: center;
     width: 350px;
-    height: 100vh;
-    border: 1px solid #000;
+    border-right: 2px solid #F0F0F0;
+    resize: horizontal;
+    height: calc(100vh - 132px);
+    overflow-y: auto;
 }
