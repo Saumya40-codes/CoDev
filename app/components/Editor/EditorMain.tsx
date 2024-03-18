@@ -3,11 +3,12 @@
 import React from 'react'
 import Editor from '@monaco-editor/react';
 
-const CustomEditor = () => {
+const EditorMain = () => {
   return (
     <div>
       <Editor
-        height="84vh"
+        height="100vh"
+        width="100vh"
         defaultLanguage="javascript"
         defaultValue="// some comment"
       />
@@ -15,4 +16,4 @@ const CustomEditor = () => {
   )
 }
 
-export default CustomEditor
+export default EditorMain

@@ -11,3 +11,12 @@
     right: 0;
     border: 2px solid #F0F0F0;
 }
+
+.projContent{
+    display: flex;
+    flex-direction: row;
+    flex-shrink: 1;
+    flex-grow: 1;
+    overflow: hidden;
+    justify-content: space-around;
+}

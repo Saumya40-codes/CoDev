@@ -33,3 +33,28 @@ export const POST = async (req: Request) => {
         await prisma.$disconnect()
     }
 }
+
+
+export const GET = async (req: Request) => {
+    try{
+        const {email} = await req.json();
+
+        const getUser = await prisma.user.findUnique({
+            where: {
+                email
+            }
+        })
+
+        if(!getUser){
+            return NextResponse.json(new ApiResponse({status: 404, message: 'User not found'}))
+        }
+
+        return NextResponse.json(new ApiResponse({status: 200, message: getUser.id}));
+    }
+    catch(e){
+        return NextResponse.json(new ApiResponse({status: 500, message: (e as Error).message}))
+    }
+    finally{
+        await prisma.$disconnect()
+    }
+}

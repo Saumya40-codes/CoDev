@@ -1,14 +1,32 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './createproject.module.css'
 import { CloseIcon } from '@chakra-ui/icons'
 import { useCookies } from 'next-client-cookies';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 const CreateProject = ({setCreateProject}:{setCreateProject:React.Dispatch<React.SetStateAction<boolean>>}) => {
     const cookies = useCookies();
     const userId = cookies.get('userId');
+    const session = useSession().data;
+
+    useEffect(()=>{
+        if(userId === undefined){
+            const getUserId = async() => {
+                const res = await fetch('/api/auth/addUser',{
+                    body: JSON.stringify({
+                        email: session?.user?.email,
+                    }),
+                });
+                const data = await res.json();
+                cookies.set('userId', data.id);
+
+                getUserId(); 
+            }
+        }
+    },[userId])
     const router = useRouter();
 
     const [projectName, setProjectName] = useState<string>('');
