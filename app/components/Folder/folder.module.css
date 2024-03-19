@@ -16,3 +16,10 @@
     cursor: pointer;
     transition: 0.3s;
 }
+
+.openIcons{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}

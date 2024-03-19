@@ -2,7 +2,7 @@
 
 import React,{useEffect, useState} from 'react'
 import styles from './folder.module.css'
-import { ChevronDownIcon, ChevronLeftIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon, ChevronLeftIcon, AddIcon } from '@chakra-ui/icons'
 
 interface FolderProps {
   id: string;
@@ -16,6 +16,7 @@ const Folder = ({id}:{id:string}) => {
 
   const [data, setData] = useState<FolderProps>();
   const[open, setOpen] = useState<boolean>(false);
+  const[newFile, setNewFile] = useState<boolean>(false);
 
   useEffect(()=>{
     const getFolders = async() => {
@@ -52,8 +53,21 @@ const Folder = ({id}:{id:string}) => {
           <h1>{data?.name}</h1>
         </div>
         <div>
-          {!open ? <ChevronDownIcon onClick={(e)=>handleChevs(e)} />: <ChevronLeftIcon onClick={(e)=>handleChevs(e)} />}
+          {open ? (
+            <div className={styles.openIcons}>
+              <AddIcon onClick={()=>setNewFile((prevNewFile)=>!prevNewFile)} /> 
+              <ChevronDownIcon onClick={(e)=>handleChevs(e)} />
+            </div>
+          ): <ChevronLeftIcon onClick={(e)=>handleChevs(e)} />}
         </div>
+      </div>
+      <div>
+        {newFile && open && (
+          <div>
+            <input type="text" placeholder="Enter file name" />
+          </div>
+          )
+        }
       </div>
     </div>
   )
