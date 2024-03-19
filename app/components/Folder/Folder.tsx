@@ -31,8 +31,6 @@ const Folder = ({id}:{id:string}) => {
         });
         const data = await res.json();
         setData(data);
-
-        console.log(data);
       }
       catch(err){
         console.error(err);
