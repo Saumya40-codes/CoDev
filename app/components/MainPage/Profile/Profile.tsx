@@ -13,7 +13,6 @@ import {
   PopoverFooter,
   PopoverArrow,
   PopoverCloseButton,
-  PopoverAnchor,
 } from '@chakra-ui/react'
 
 import { useCookies } from 'next-client-cookies';
@@ -33,9 +32,9 @@ const Profile = ({ session }: { session: Session }) => {
 
   return (
     <div>
-      <Popover >
+      <Popover>
         <PopoverTrigger>
-          <img src={session?.user?.image || ''} alt="Profile" className={styles.avatar}/>
+          <img src={session?.user?.image ?? ''} alt="Profile" className={styles.avatar}/>
         </PopoverTrigger>
         <PopoverContent marginRight='20px' background='hsl(212 18% 14%)' color='#0A0909' fontWeight='bold'>
           <PopoverArrow />

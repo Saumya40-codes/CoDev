@@ -22,9 +22,8 @@ const CreateProject = ({setCreateProject}:{setCreateProject:React.Dispatch<React
                 });
                 const data = await res.json();
                 cookies.set('userId', data.id);
-
-                getUserId(); 
             }
+            getUserId(); 
         }
     },[userId])
     const router = useRouter();
