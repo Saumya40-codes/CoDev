@@ -12,7 +12,7 @@ const project = ({ params }: { params: { id: string } }) => {
       </div>
       <hr className={styles.ruler} />
       <div className={styles.projContent}>
-        <Folder/>
+        <Folder id={params.id}/>
         <EditorMain/>
       </div>
     </div>

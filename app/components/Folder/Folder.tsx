@@ -1,12 +1,60 @@
-import React from 'react'
-import styles from './folder.module.css'
+'use client'
 
-const Folder = () => {
+import React,{useEffect, useState} from 'react'
+import styles from './folder.module.css'
+import { ChevronDownIcon, ChevronLeftIcon } from '@chakra-ui/icons'
+
+interface FolderProps {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+}
+
+const Folder = ({id}:{id:string}) => {
+
+  const [data, setData] = useState<FolderProps>();
+  const[open, setOpen] = useState<boolean>(false);
+
+  useEffect(()=>{
+    const getFolders = async() => {
+      try{
+        const res = await fetch('/api/projects',{
+          method: 'POST',
+          headers:{
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id
+          })
+        });
+        const data = await res.json();
+        setData(data);
+
+        console.log(data);
+      }
+      catch(err){
+        console.error(err);
+      }
+    }
+    getFolders();
+  }, [data?.id]);
+
+  const handleChevs = (e:React.MouseEvent<SVGElement, MouseEvent>) => {
+    e.preventDefault();
+    setOpen((prevOpen)=>!prevOpen);
+  }
 
   return (
     <div className={styles.folders}>
-      <div>
-        Project Name
+      <div className={styles.names}>
+        <div>
+          <h1>{data?.name}</h1>
+        </div>
+        <div>
+          {!open ? <ChevronDownIcon onClick={(e)=>handleChevs(e)} />: <ChevronLeftIcon onClick={(e)=>handleChevs(e)} />}
+        </div>
       </div>
     </div>
   )

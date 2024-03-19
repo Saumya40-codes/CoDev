@@ -4,4 +4,15 @@
     resize: horizontal;
     height: calc(100vh - 132px);
     overflow-y: auto;
+    color: #F0F0F0;
+    padding: 10px;
+}
+
+.names{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: 0.3s;
 }

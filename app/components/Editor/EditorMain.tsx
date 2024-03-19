@@ -6,9 +6,7 @@ import Editor from '@monaco-editor/react';
 const EditorMain = () => {    
 
   const handleEditorDidMount = (editor: any, monaco: any) => {
-
-    console.log('editorDidMount', monaco.editor);
-
+    
     monaco.editor.defineTheme('my-theme', {
       base: 'vs-dark',
       inherit: true,
