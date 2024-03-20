@@ -3,6 +3,7 @@
 import React,{useEffect, useState} from 'react'
 import styles from './folder.module.css'
 import { ChevronDownIcon, ChevronLeftIcon, AddIcon } from '@chakra-ui/icons'
+import NewFile from './NewFile/NewFile'
 
 interface FolderProps {
   id: string;
@@ -63,9 +64,7 @@ const Folder = ({id}:{id:string}) => {
       </div>
       <div>
         {newFile && open && (
-          <div>
-            <input type="text" placeholder="Enter file name" />
-          </div>
+          <NewFile />
           )
         }
       </div>
