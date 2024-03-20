@@ -2,8 +2,13 @@
 
 import React from 'react'
 import Editor from '@monaco-editor/react';
+import { useAppSelector } from '@/app/lib/redux/hooks';
+import logo from '../../../styles/images/logo.png';
+import styles from './editor.module.css';
+import { EmailIcon } from '@chakra-ui/icons'
 
 const EditorMain = () => {    
+  const currentFile = useAppSelector((state) => state.file.currentFile);
 
   const handleEditorDidMount = (editor: any, monaco: any) => {
     
@@ -34,16 +39,22 @@ const EditorMain = () => {
     monaco.editor.setTheme('my-theme');
     editor.focus();
   }
+
   return (
     <div style={{width:"100vw", resize:'both', overflow:'auto'}}>
-      <Editor
+      {currentFile ? (<Editor
         height="100vh"
         width="100%"
         defaultLanguage="javascript"
         defaultValue="// some comment"
         onMount={handleEditorDidMount}
         theme="my-theme"
-      />
+      />): (
+        <div className={styles.imgBlock}>
+          <img src={logo.src} alt="Logo" className={styles.logoImg}/>
+          <span className={styles.logoText}>Get started by creating a new file <EmailIcon /> </span>
+        </div>
+      )}
     </div>
   )
 }

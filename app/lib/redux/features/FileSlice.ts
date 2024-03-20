@@ -1,13 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 interface FileProps{
-    currentFile: string;
+    currentFile: string | null;
     currentCode: string;
     currentLanguage: string;
 }
 
 const initialState: FileProps = {
-    currentFile: '',
+    currentFile: null,
     currentCode: '',
     currentLanguage: ''
 }
