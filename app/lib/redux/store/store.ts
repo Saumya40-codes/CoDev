@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import FileReducer from "../features/FileSlice";
+import ProjectReducer from "../features/ProjectSlice";
 
 export const store = configureStore({
     reducer: {
-        file: FileReducer
+        file: FileReducer,
+        project: ProjectReducer
     },
 });
 

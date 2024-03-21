@@ -9,6 +9,9 @@ import { EmailIcon } from '@chakra-ui/icons'
 
 const EditorMain = () => {    
   const currentFile = useAppSelector((state) => state.file.currentFile);
+  const currentLanguage = useAppSelector((state) => state.file.currentLanguage);
+  const currentCode = useAppSelector((state) => state.file.currentCode);
+
 
   const handleEditorDidMount = (editor: any, monaco: any) => {
     
@@ -45,8 +48,8 @@ const EditorMain = () => {
       {currentFile ? (<Editor
         height="100vh"
         width="100%"
-        defaultLanguage="javascript"
-        defaultValue="// some comment"
+        defaultLanguage={currentLanguage}
+        defaultValue={currentCode}
         onMount={handleEditorDidMount}
         theme="my-theme"
       />): (

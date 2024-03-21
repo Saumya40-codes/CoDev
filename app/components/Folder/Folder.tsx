@@ -1,9 +1,11 @@
 'use client'
 
-import React,{useEffect, useState} from 'react'
+import React,{use, useEffect, useState} from 'react'
 import styles from './folder.module.css'
 import { ChevronDownIcon, ChevronLeftIcon, AddIcon } from '@chakra-ui/icons'
 import NewFile from './NewFile/NewFile'
+import { useAppDispatch } from '@/app/lib/redux/hooks';
+import { setProjectId } from '@/app/lib/redux/features/ProjectSlice'
 
 interface FolderProps {
   id: string;
@@ -42,6 +44,14 @@ const Folder = ({id}:{id:string}) => {
     getFolders();
   }, [data?.id]);
 
+  const dispatch = useAppDispatch();
+
+  useEffect(()=>{
+    if(id){
+      dispatch(setProjectId(id));
+    }
+  }, [id]); 
+
   const handleChevs = (e:React.MouseEvent<SVGElement, MouseEvent>) => {
     e.preventDefault();
     setOpen((prevOpen)=>!prevOpen);
@@ -64,7 +74,7 @@ const Folder = ({id}:{id:string}) => {
       </div>
       <div>
         {newFile && open && (
-          <NewFile />
+          <NewFile setNewFile={setNewFile} />
           )
         }
       </div>

@@ -27,15 +27,23 @@ model Projects{
   userId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  codes    Codes[]
+  files    Files[]
+}
+
+model Files{
+  id      String      @id @default(uuid())
+  name    String
+  language String
+  project Projects    @relation(fields: [projectId], references: [id])
+  projectId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  code Codes?
 }
 
 model Codes{
   id       String      @id @default(uuid())
-  code     String
-  fileName String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  project Projects     @relation(fields: [projectId], references: [id])
-  projectId String
+  code     String? @db.LongText
+  file     Files       @relation(fields: [fileId], references: [id])
+  fileId   String  @unique 
 }
