@@ -10,16 +10,12 @@ import { useSession } from 'next-auth/react';
 const CreateProject = ({setCreateProject}:{setCreateProject:React.Dispatch<React.SetStateAction<boolean>>}) => {
     const cookies = useCookies();
     const userId = cookies.get('userId');
-    const session = useSession().data;
+    const {data: session} = useSession();
 
     useEffect(()=>{
-        if(userId === undefined){
+        if(userId === undefined && session?.user?.email !== undefined){
             const getUserId = async() => {
-                const res = await fetch('/api/auth/addUser',{
-                    body: JSON.stringify({
-                        email: session?.user?.email,
-                    }),
-                });
+                const res = await fetch(`api/auth/${session?.user?.email}/getUser`);
                 const data = await res.json();
                 cookies.set('userId', data.id);
             }

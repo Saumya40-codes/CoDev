@@ -29,7 +29,7 @@ export const authConfig: NextAuthOptions = {
                         data:{
                             email: user.email as string,
                             name: user.name as string,
-                            image: user.image as string
+                            image: user.image as string,
                         }
                     });
 

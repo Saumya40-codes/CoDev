@@ -1,17 +1,43 @@
 'use client'
 
-import React from 'react'
+import React, {useEffect} from 'react'
 import Editor from '@monaco-editor/react';
-import { useAppSelector } from '@/app/lib/redux/hooks';
+import { useAppSelector, useAppDispatch } from '@/app/lib/redux/hooks';
 import logo from '../../../styles/images/logo.png';
 import styles from './editor.module.css';
 import { EmailIcon } from '@chakra-ui/icons'
+import { setCurrentCode } from '@/app/lib/redux/features/FileSlice';
 
 const EditorMain = () => {    
-  const currentFile = useAppSelector((state) => state.file.currentFile);
+  const currentFile = useAppSelector((state) => state?.file.currentFile);
   const currentLanguage = useAppSelector((state) => state.file.currentLanguage);
   const currentCode = useAppSelector((state) => state.file.currentCode);
+  const dispatch = useAppDispatch();
 
+  useEffect(()=>{
+    if(currentFile){
+    const getCode = async() => {
+      try{
+        const res = await fetch('/api/file/getCode', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            fileId: currentFile
+          })
+        });
+
+        const data = await res.json();
+        dispatch(setCurrentCode(data.code));
+      }
+      catch(err){
+        console.error(err);
+      }
+    }
+    getCode();
+  }
+  }, [currentFile])
 
   const handleEditorDidMount = (editor: any, monaco: any) => {
     
@@ -20,7 +46,7 @@ const EditorMain = () => {
       inherit: true,
       rules: [{ background: 'EDF1F5'}],
       colors: {
-        'editor.foreground': '#000000',
+        'editor.foreground': '#ffffff',
         'editor.background': '#000b1c',
         'editorCursor.foreground': '#8B0000',
         'editor.lineHighlightBackground': '#0000FF20',
@@ -36,6 +62,9 @@ const EditorMain = () => {
         'minimapSlider.background': '#4A4A4A',
         'minimapSlider.hoverBackground': '#5A5A5A',
         'minimapSlider.activeBackground': '#6A6A6A',
+        'scrollbar.shadow': '#000000',
+        'scrollbarSlider.background': '#797979',
+        'scrollbarSlider.hoverBackground': '#717171',
       }
     });
 

@@ -1,11 +1,12 @@
 'use client'
 
-import React,{use, useEffect, useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import styles from './folder.module.css'
-import { ChevronDownIcon, ChevronLeftIcon, AddIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon, ChevronLeftIcon, AddIcon, EmailIcon } from '@chakra-ui/icons'
 import NewFile from './NewFile/NewFile'
-import { useAppDispatch } from '@/app/lib/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks';
 import { setProjectId } from '@/app/lib/redux/features/ProjectSlice'
+import { setCurrentFile, setCurrentLanguage } from '@/app/lib/redux/features/FileSlice'
 
 interface FolderProps {
   id: string;
@@ -13,6 +14,12 @@ interface FolderProps {
   createdAt: string;
   updatedAt: string;
   userId: string;
+  files: [
+    {
+      id: string,
+      name: string
+    }
+  ];
 }
 
 const Folder = ({id}:{id:string}) => {
@@ -20,6 +27,7 @@ const Folder = ({id}:{id:string}) => {
   const [data, setData] = useState<FolderProps>();
   const[open, setOpen] = useState<boolean>(false);
   const[newFile, setNewFile] = useState<boolean>(false);
+  const currentFile = useAppSelector((state)=>state?.file?.currentFile);
 
   useEffect(()=>{
     const getFolders = async() => {
@@ -35,14 +43,19 @@ const Folder = ({id}:{id:string}) => {
         });
         const data = await res.json();
         setData(data);
-        console.log(data);
+        
+        if(data && data.files){
+          const file = data.files[0];
+          dispatch(setCurrentFile(file.id));
+          dispatch(setCurrentLanguage(file.language));
+        }
       }
       catch(err){
         console.error(err);
       }
     }
     getFolders();
-  }, [data?.id]);
+  }, [data?.id, currentFile]);
 
   const dispatch = useAppDispatch();
 
@@ -77,6 +90,22 @@ const Folder = ({id}:{id:string}) => {
           <NewFile setNewFile={setNewFile} />
           )
         }
+        {open && (
+          <div>
+            {data?.files?.map((file)=>{
+              return (
+                <div className={styles.files}>
+                  <div>
+                    <EmailIcon />
+                  </div>
+                  <div key={file?.id} className={styles.file}>
+                    <span>{file?.name}</span>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
       </div>
     </div>
   )

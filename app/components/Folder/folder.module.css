@@ -23,3 +23,18 @@
     align-items: center;
     gap: 10px;
 }
+
+.files{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap:20px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.file{
+    flex-shrink: 1;
+    flex-grow: 1;
+    width: 180px;
+}

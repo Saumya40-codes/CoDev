@@ -7,6 +7,19 @@ export const POST = async (req: Request, res: Response) => {
         const project = await prisma.projects.findUnique({
             where:{
                 id
+            },
+            select:{
+                name: true,
+                files: {
+                    select: {
+                        id: true,
+                        name: true,
+                        language: true
+                    },
+                    orderBy: {
+                        name: 'asc'
+                    },
+                }
             }
         })
         if(!project){
