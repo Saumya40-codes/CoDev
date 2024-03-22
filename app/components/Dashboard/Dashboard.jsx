@@ -3,6 +3,7 @@
 import React,{useState} from 'react'
 import styles from './dashboard.module.css'
 import CreateProject from '../CreateProject/CreateProject';
+import RecentActivity from './RecentActivity/RecentActivity';
 
 const DashboardContents = () => {
 
@@ -24,11 +25,7 @@ const DashboardContents = () => {
             </button>
             <hr className={styles.ruler} />
         </div>
-        <div className={styles.recProjects}>
-            <span>
-                Recent Activity
-            </span>
-        </div>
+        <RecentActivity />
     </div>
   )
 }

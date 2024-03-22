@@ -2,9 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/prisma";
 
 export const GET = async (req: Request, { params }: { params: { usermail: string } }) => {
-    try{
-        console.log(params.usermail);
-        
+    try{        
         const user = await prisma.user.findUnique({
             where:{
                 email: params.usermail
