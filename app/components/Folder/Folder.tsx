@@ -70,6 +70,12 @@ const Folder = ({id}:{id:string}) => {
     setOpen((prevOpen)=>!prevOpen);
   }
 
+  const handleFileChange = (e:React.MouseEvent<HTMLSpanElement, MouseEvent>, fileId: string, fileLanguage: string) => {
+    e.preventDefault();
+    setCurrentFile(fileId);
+    setCurrentLanguage(fileLanguage);
+  }
+
   return (
     <div className={styles.folders}>
       <div className={styles.names}>
@@ -99,7 +105,7 @@ const Folder = ({id}:{id:string}) => {
                     <EmailIcon />
                   </div>
                   <div key={file?.id} className={styles.file}>
-                    <span>{file?.name}</span>
+                    <span onClick={(e)=>handleFileChange(e,file.id,file.name)}>{file?.name}</span>
                   </div>
                 </div>
               )
