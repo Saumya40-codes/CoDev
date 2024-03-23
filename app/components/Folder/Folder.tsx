@@ -47,8 +47,10 @@ const Folder = ({id}:{id:string}) => {
         
         if(data && data.files){
           const file = data.files[0];
-          dispatch(setCurrentFile(file.id));
-          dispatch(setCurrentLanguage(file.language));
+          if(currentFile === ''){
+            dispatch(setCurrentFile(file.id));
+            dispatch(setCurrentLanguage(file.name));
+          }
         }
       }
       catch(err){
@@ -56,7 +58,7 @@ const Folder = ({id}:{id:string}) => {
       }
     }
     getFolders();
-  }, [data?.id, currentFile]);
+  }, [data?.id]);
 
   const dispatch = useAppDispatch();
 
@@ -73,7 +75,7 @@ const Folder = ({id}:{id:string}) => {
 
   const handleFileChange = async (e:React.MouseEvent<HTMLSpanElement, MouseEvent>, fileId: string, fileLanguage: string) => {
     e.preventDefault();
-    
+
     try{
       const res = await fetch('/api/file/getCode',{
         method: 'POST',
@@ -88,9 +90,9 @@ const Folder = ({id}:{id:string}) => {
       if(res.status === 200){
         const data = await res.json();
 
-        dispatch(setCurrentFile(fileId));
         dispatch(setCurrentLanguage(data.language));
         dispatch(setCurrentCode(data.code.code));
+        dispatch(setCurrentFile(fileId));
       }
     }
     catch(err){
@@ -122,7 +124,7 @@ const Folder = ({id}:{id:string}) => {
           <div>
             {data?.files?.map((file)=>{
               return (
-                <div className={styles.files}>
+                <div className={file.id === currentFile? styles.activeFile: styles.files}>
                   <div>
                     <EmailIcon />
                   </div>

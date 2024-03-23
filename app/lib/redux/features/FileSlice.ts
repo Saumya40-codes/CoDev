@@ -4,12 +4,14 @@ interface FileProps{
     currentFile: string | null;
     currentCode: string;
     currentLanguage: string;
+    fileSaved?: boolean;
 }
 
 const initialState: FileProps = {
     currentFile: null,
     currentCode: '',
-    currentLanguage: ''
+    currentLanguage: '',
+    fileSaved: false
 }
 
 export const fileSlice = createSlice({
@@ -24,6 +26,9 @@ export const fileSlice = createSlice({
         },
         setCurrentLanguage: (state, action) => {
             state.currentLanguage = action.payload;
+        },
+        setFileSaved: (state, action) => {
+            state.fileSaved = action.payload;
         }
     }
 });

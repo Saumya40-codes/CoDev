@@ -24,7 +24,7 @@
     gap: 10px;
 }
 
-.files{
+.files, .activeFile{
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -38,4 +38,9 @@
     flex-shrink: 1;
     flex-grow: 1;
     width: 180px;
+}
+
+.activeFile{
+    background-color: #525252;
+    border-radius: 12px;
 }
