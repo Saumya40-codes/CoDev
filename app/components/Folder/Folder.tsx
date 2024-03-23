@@ -2,7 +2,7 @@
 
 import React,{useEffect, useState} from 'react'
 import styles from './folder.module.css'
-import { ChevronDownIcon, ChevronLeftIcon, AddIcon, EmailIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon, ChevronLeftIcon, AddIcon, EmailIcon, WarningIcon } from '@chakra-ui/icons'
 import NewFile from './NewFile/NewFile'
 import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks';
 import { setProjectId } from '@/app/lib/redux/features/ProjectSlice'
@@ -28,6 +28,7 @@ const Folder = ({id}:{id:string}) => {
   const[open, setOpen] = useState<boolean>(false);
   const[newFile, setNewFile] = useState<boolean>(false);
   const currentFile = useAppSelector((state)=>state?.file?.currentFile);
+  const fileSaved = useAppSelector((state)=>state?.file?.fileSaved);
 
 
   useEffect(()=>{
@@ -129,7 +130,8 @@ const Folder = ({id}:{id:string}) => {
                     <EmailIcon />
                   </div>
                   <div key={file?.id} className={styles.file}>
-                    <span onClick={(e)=>handleFileChange(e,file.id,file.name)}>{file?.name}</span>
+                    <span onClick={(e)=>handleFileChange(e,file.id,file.name)} className={styles.fileNm}>{file?.name}</span>
+                    {!fileSaved && file.id === currentFile && <WarningIcon marginLeft='40px' />}
                   </div>
                 </div>
               )

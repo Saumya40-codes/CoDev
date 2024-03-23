@@ -6,12 +6,14 @@ import { useAppSelector, useAppDispatch } from '@/app/lib/redux/hooks';
 import logo from '../../../styles/images/logo.png';
 import styles from './editor.module.css';
 import { EmailIcon } from '@chakra-ui/icons'
-import { setCurrentCode } from '@/app/lib/redux/features/FileSlice';
+import { setCurrentCode, setFileSaved } from '@/app/lib/redux/features/FileSlice';
+import { editor } from 'monaco-editor';
 
 const EditorMain = () => {    
   const currentFile = useAppSelector((state) => state?.file.currentFile);
   const currentLanguage = useAppSelector((state) => state?.file.currentLanguage);
   const currentCode = useAppSelector((state) => state?.file.currentCode);
+  const fileSaved = useAppSelector((state) => state?.file.fileSaved);
   const dispatch = useAppDispatch();
 
   const handleEditorDidMount = (editor: any, monaco: any) => {
@@ -47,14 +49,28 @@ const EditorMain = () => {
     editor.focus();
   }
 
+  const handleCodeChange = (value: string | undefined, event: editor.IModelContentChangedEvent) => {
+    dispatch(setCurrentCode(value));
+
+    if(fileSaved) {
+      dispatch(setFileSaved(false));
+    }
+  }
+
+  const handleCtrlQ = (event: React.KeyboardEvent) => {
+    if(event.ctrlKey && event.key === 'q') {
+      dispatch(setFileSaved(true));
+    }
+  }
+
   return (
-    <div style={{width:"100vw", resize:'both', overflow:'auto'}}>
+    <div style={{width:"100vw", resize:'both', overflow:'auto'}} onKeyDown={handleCtrlQ}>
       {currentFile ? (<Editor
         height="100vh"
         width="100%"
-        defaultLanguage={currentLanguage}
         defaultValue='Start from here...'
         onMount={handleEditorDidMount}
+        onChange={handleCodeChange}
         value={currentCode}
         theme="my-theme"
       />): (

@@ -11,7 +11,7 @@ const initialState: FileProps = {
     currentFile: null,
     currentCode: '',
     currentLanguage: '',
-    fileSaved: false
+    fileSaved: true
 }
 
 export const fileSlice = createSlice({
@@ -33,5 +33,5 @@ export const fileSlice = createSlice({
     }
 });
 
-export const { setCurrentFile, setCurrentCode, setCurrentLanguage } = fileSlice.actions;
+export const { setCurrentFile, setCurrentCode, setCurrentLanguage, setFileSaved } = fileSlice.actions;
 export default fileSlice.reducer;
