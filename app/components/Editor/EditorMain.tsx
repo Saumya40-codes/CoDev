@@ -14,31 +14,6 @@ const EditorMain = () => {
   const currentCode = useAppSelector((state) => state?.file.currentCode);
   const dispatch = useAppDispatch();
 
-  useEffect(()=>{
-    if(currentFile){
-    const getCode = async() => {
-      try{
-        const res = await fetch('/api/file/getCode', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            fileId: currentFile
-          })
-        });
-
-        const data = await res.json();
-        dispatch(setCurrentCode(data.code));
-      }
-      catch(err){
-        console.error(err);
-      }
-    }
-    getCode();
-  }
-  }, [currentFile])
-
   const handleEditorDidMount = (editor: any, monaco: any) => {
     
     monaco.editor.defineTheme('my-theme', {

@@ -6,7 +6,7 @@ import { ChevronDownIcon, ChevronLeftIcon, AddIcon, EmailIcon } from '@chakra-ui
 import NewFile from './NewFile/NewFile'
 import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks';
 import { setProjectId } from '@/app/lib/redux/features/ProjectSlice'
-import { setCurrentFile, setCurrentLanguage } from '@/app/lib/redux/features/FileSlice'
+import { setCurrentFile, setCurrentLanguage, setCurrentCode } from '@/app/lib/redux/features/FileSlice'
 
 interface FolderProps {
   id: string;
@@ -28,6 +28,7 @@ const Folder = ({id}:{id:string}) => {
   const[open, setOpen] = useState<boolean>(false);
   const[newFile, setNewFile] = useState<boolean>(false);
   const currentFile = useAppSelector((state)=>state?.file?.currentFile);
+
 
   useEffect(()=>{
     const getFolders = async() => {
@@ -70,10 +71,31 @@ const Folder = ({id}:{id:string}) => {
     setOpen((prevOpen)=>!prevOpen);
   }
 
-  const handleFileChange = (e:React.MouseEvent<HTMLSpanElement, MouseEvent>, fileId: string, fileLanguage: string) => {
+  const handleFileChange = async (e:React.MouseEvent<HTMLSpanElement, MouseEvent>, fileId: string, fileLanguage: string) => {
     e.preventDefault();
-    setCurrentFile(fileId);
-    setCurrentLanguage(fileLanguage);
+    
+    try{
+      const res = await fetch('/api/file/getCode',{
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          fileId
+        })
+      });
+     
+      if(res.status === 200){
+        const data = await res.json();
+
+        dispatch(setCurrentFile(fileId));
+        dispatch(setCurrentLanguage(data.language));
+        dispatch(setCurrentCode(data.code.code));
+      }
+    }
+    catch(err){
+      console.error(err);
+    }
   }
 
   return (

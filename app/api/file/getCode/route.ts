@@ -6,13 +6,18 @@ export const POST = async (req: Request, res: Response) => {
     try{
         const {fileId} = await req.json();
 
-        const code = await prisma.codes.findUnique({
+        const code = await prisma.files.findUnique({
             where:{
-                fileId
+                id: fileId
             },
             select:{
                 id: true,
-                code: true
+                language: true,
+                code: {
+                    select:{
+                        code: true
+                    }
+                }
             }
         });
 
