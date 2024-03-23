@@ -22,9 +22,8 @@ export const GET = async (req: Request, { params }: { params: { userId: string }
                             }
                         }
                     },
-                    orderBy:{
-                        updatedAt: 'desc',
-                        createdAt: 'desc'
+                    orderBy: {
+                        updatedAt: 'desc'
                     }
                 }
             }

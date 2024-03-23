@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/prisma";
 
 
-export const GET = async (req: Request, res: Response) => {
+export const POST = async (req: Request, res: Response) => {
     try{
-        const {fileId} = await res.json();
+        const {fileId} = await req.json();
 
         const code = await prisma.codes.findUnique({
             where:{
@@ -19,6 +19,7 @@ export const GET = async (req: Request, res: Response) => {
         return NextResponse.json(code, {status: 200});
     }
     catch(error){
+        console.log(error);
         return NextResponse.json({message: 'Error fetching code block'}, {status: 500});
     }
 }

@@ -10,8 +10,8 @@ import { setCurrentCode } from '@/app/lib/redux/features/FileSlice';
 
 const EditorMain = () => {    
   const currentFile = useAppSelector((state) => state?.file.currentFile);
-  const currentLanguage = useAppSelector((state) => state.file.currentLanguage);
-  const currentCode = useAppSelector((state) => state.file.currentCode);
+  const currentLanguage = useAppSelector((state) => state?.file.currentLanguage);
+  const currentCode = useAppSelector((state) => state?.file.currentCode);
   const dispatch = useAppDispatch();
 
   useEffect(()=>{
@@ -78,8 +78,9 @@ const EditorMain = () => {
         height="100vh"
         width="100%"
         defaultLanguage={currentLanguage}
-        defaultValue={currentCode}
+        defaultValue='Start from here...'
         onMount={handleEditorDidMount}
+        value={currentCode}
         theme="my-theme"
       />): (
         <div className={styles.imgBlock}>

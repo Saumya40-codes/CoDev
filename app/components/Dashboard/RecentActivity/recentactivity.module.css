@@ -6,13 +6,65 @@
     color: #F0F0F0;
 }
 
-.recProjects span{
-    font-size: 48px;
+
+.projMain{
+    width: 790px;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 50px;
+    gap: 50px;
+    border : 1px solid #F0F0F0;
+    border-radius: 16px;
+    margin-top: 20px;
+    background: #212121;
+    box-shadow: 0 0 14px rgba(224, 213, 213, 0.1);
+    transition: all 0.3s ease-in-out;
 }
 
-.projects{
+.project{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;   
+}
+
+.projMain:hover{
+    width:780px;
+    box-shadow: 0 0 14px rgba(226, 218, 218, 0.1);
+}
+
+.projectDetails, .participants{
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.view{
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.participantsImg{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-top: 20px;
+}
+
+.viewBtn{
+    padding: 10px 20px;
+    border: 2px solid #313131;
+    border-radius: 15px;
+    background-color: #121212;
+    color: #F0F0F0;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.viewBtn:hover{
+    box-shadow: 0 0 14px rgba(224, 213, 213, 0.1);
 }
