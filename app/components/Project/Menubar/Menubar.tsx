@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react'
-import { useAppSelector } from '@/app/lib/redux/hooks';
+import { useAppSelector, useAppDispatch } from '@/app/lib/redux/hooks';
+import { setShareId } from '@/app/lib/redux/features/ProjectSlice';
 import { AddIcon } from '@chakra-ui/icons';
 import {
     Popover,
@@ -19,6 +20,27 @@ import styles from './menubar.module.css'
 const Menubar = () => {
 
     const shareId = useAppSelector(state => state.project.shareId);
+    const projectId = useAppSelector(state => state.project.projectId);
+    const dispatch = useAppDispatch();
+
+    const shareProject = async (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
+        try{
+          const res = await fetch('/api/projects/share', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ projectId })
+          });
+
+          const data = await res.json();
+          dispatch(setShareId(data.shareId));
+        }
+        catch(err){
+          console.log(err);
+        }
+      }
 
   return (
     <div className={styles.menub}>
@@ -32,13 +54,16 @@ const Menubar = () => {
         <PopoverHeader>
           Collaborate with others!
         </PopoverHeader>
+        { shareId &&(
         <PopoverBody>
-          <button>
+          <input type="text" value={shareId} readOnly/>
+        </PopoverBody>
+        )
+        }
+        <PopoverFooter>
+          <button onClick={(e)=> shareProject(e)} disabled={shareId !== null}>
             Invite other devs
           </button>
-        </PopoverBody>
-        <PopoverFooter>
-          
         </PopoverFooter>
       </PopoverContent>
     </Popover>

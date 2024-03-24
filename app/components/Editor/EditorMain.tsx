@@ -15,6 +15,8 @@ const EditorMain = () => {
   const currentLanguage = useAppSelector((state) => state?.file.currentLanguage);
   const currentCode = useAppSelector((state) => state?.file.currentCode);
   const fileSaved = useAppSelector((state) => state?.file.fileSaved);
+  const shareId = useAppSelector((state) => state?.project.shareId);
+  const projectId = useAppSelector((state) => state?.project.projectId);
   const dispatch = useAppDispatch();
 
   const handleEditorDidMount = (editor: any, monaco: any) => {
@@ -50,15 +52,21 @@ const EditorMain = () => {
     editor.focus();
   }
 
-  // useEffect(()=>{
-  //   const path = window.location.href;
-  //   const url = new URL(path);
-  //   const type = url.searchParams.get('type');
+  useEffect(()=>{
+    const path = window.location.href;
+    const url = new URL(path);
+    const urlShareId = url.searchParams.get('shareId');
 
-  //   if(type === 'invite') {
-  //     socket.emit('message', 'user joined the room');
-  //   }
-  // },[]);
+    if(!urlShareId) {
+      return;
+    }
+
+    console.log(urlShareId, shareId);
+
+    if(urlShareId === shareId) {
+      socket.emit('join-project', projectId);
+    }
+  },[]);
 
   const handleCodeChange = (value: string | undefined, event: editor.IModelContentChangedEvent) => {
     dispatch(setCurrentCode(value));
@@ -80,6 +88,7 @@ const EditorMain = () => {
         height="100vh"
         width="100%"
         defaultValue='Start from here...'
+        language={currentLanguage}
         onMount={handleEditorDidMount}
         onChange={handleCodeChange}
         value={currentCode}

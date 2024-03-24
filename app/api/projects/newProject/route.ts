@@ -5,6 +5,7 @@ import { prisma } from "@/prisma/prisma";
 export const POST = async(req:Request, res: Response) => {
     try{
         const {name, userId} = await req.json();
+        console.log(name, userId);
 
         const newProject = await prisma.projects.create({
             data: {
@@ -16,6 +17,7 @@ export const POST = async(req:Request, res: Response) => {
         return NextResponse.json({id: newProject.id}, {status: 201});
     }
     catch(error){
-        return NextResponse.json({error: (error as Error).message || 'Error Occured'}, {status: 500});
+        console.log(error);
+        return NextResponse.json({error: 'Error Occured'}, {status: 500});
     }
 }
