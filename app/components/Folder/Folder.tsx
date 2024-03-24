@@ -6,7 +6,7 @@ import { ChevronDownIcon, ChevronLeftIcon, AddIcon, EmailIcon, WarningIcon } fro
 import NewFile from './NewFile/NewFile'
 import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks';
 import { setProjectId } from '@/app/lib/redux/features/ProjectSlice'
-import { setCurrentFile, setCurrentLanguage, setCurrentCode } from '@/app/lib/redux/features/FileSlice'
+import { setCurrentFile, setCurrentLanguage, setCurrentCode, setFileSaved } from '@/app/lib/redux/features/FileSlice'
 
 interface FolderProps {
   id: string;
@@ -59,7 +59,7 @@ const Folder = ({id}:{id:string}) => {
       }
     }
     getFolders();
-  }, [data?.id]);
+  }, [currentFile, id]);
 
   const dispatch = useAppDispatch();
 
@@ -94,6 +94,7 @@ const Folder = ({id}:{id:string}) => {
         dispatch(setCurrentLanguage(data.language));
         dispatch(setCurrentCode(data.code.code));
         dispatch(setCurrentFile(fileId));
+        dispatch(setFileSaved(true));
       }
     }
     catch(err){

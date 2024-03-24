@@ -8,6 +8,7 @@ import styles from './editor.module.css';
 import { EmailIcon } from '@chakra-ui/icons'
 import { setCurrentCode, setFileSaved } from '@/app/lib/redux/features/FileSlice';
 import { editor } from 'monaco-editor';
+import socket from '@/app/lib/socket/socket';
 
 const EditorMain = () => {    
   const currentFile = useAppSelector((state) => state?.file.currentFile);
@@ -48,6 +49,16 @@ const EditorMain = () => {
     monaco.editor.setTheme('my-theme');
     editor.focus();
   }
+
+  useEffect(()=>{
+    const path = window.location.href;
+    const url = new URL(path);
+    const type = url.searchParams.get('type');
+
+    if(type === 'invite') {
+      socket.emit('message', 'user joined the room');
+    }
+  },[]);
 
   const handleCodeChange = (value: string | undefined, event: editor.IModelContentChangedEvent) => {
     dispatch(setCurrentCode(value));

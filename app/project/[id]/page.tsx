@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './project.module.css'
-import Navbar from '@/app/components/MainPage/Navbar/Navbar'
+import Navbar from '@/app/components/Project/Navbar/Navbar'
 import Folder from '@/app/components/Folder/Folder'
 import EditorMain from '@/app/components/Editor/EditorMain'
 
