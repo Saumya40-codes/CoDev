@@ -2,10 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface ProjectProps{
     projectId: string;
+    shareId?: string | null;
 }
 
-const initialState = {
-    projectId: ''
+const initialState:ProjectProps  = {
+    projectId: '',
+    shareId: null
 }
 
 export const projectSlice = createSlice({
@@ -14,9 +16,12 @@ export const projectSlice = createSlice({
     reducers: {
         setProjectId: (state, action) => {
             state.projectId = action.payload;
+        },
+        setShareId: (state, action) => {
+            state.shareId = action.payload;
         }
     }
 });
 
-export const { setProjectId } = projectSlice.actions;
+export const { setProjectId, setShareId } = projectSlice.actions;
 export default projectSlice.reducer;

@@ -30,6 +30,13 @@
     margin-left: 20px;
 }
 
+.btns{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 90px;
+}
+
 .codevLogo{
     width:90px;
     height:90px;

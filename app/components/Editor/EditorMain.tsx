@@ -50,15 +50,15 @@ const EditorMain = () => {
     editor.focus();
   }
 
-  useEffect(()=>{
-    const path = window.location.href;
-    const url = new URL(path);
-    const type = url.searchParams.get('type');
+  // useEffect(()=>{
+  //   const path = window.location.href;
+  //   const url = new URL(path);
+  //   const type = url.searchParams.get('type');
 
-    if(type === 'invite') {
-      socket.emit('message', 'user joined the room');
-    }
-  },[]);
+  //   if(type === 'invite') {
+  //     socket.emit('message', 'user joined the room');
+  //   }
+  // },[]);
 
   const handleCodeChange = (value: string | undefined, event: editor.IModelContentChangedEvent) => {
     dispatch(setCurrentCode(value));
