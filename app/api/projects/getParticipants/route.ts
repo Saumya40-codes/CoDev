@@ -6,7 +6,7 @@ export const POST = async (req: Request, res: Response) => {
         const { projectId } = await req.json();
         const participants = await prisma.participants.findMany({
             where: {
-                projectId: projectId as string
+                projectId
             },
             select: {
                 user :{
@@ -19,8 +19,6 @@ export const POST = async (req: Request, res: Response) => {
                 }
             }
         });
-
-        console.log(participants);
 
         return NextResponse.json(participants, { status: 200 });
     }

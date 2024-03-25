@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks';
 import { setProjectId } from '@/app/lib/redux/features/ProjectSlice'
 import { setCurrentFile, setCurrentLanguage, setCurrentCode, setFileSaved } from '@/app/lib/redux/features/FileSlice'
 import { setShareId } from '@/app/lib/redux/features/ProjectSlice'
+import socket from '@/app/lib/socket/socket'
 
 interface FolderProps {
   id: string;
@@ -35,8 +36,7 @@ const Folder = ({id}:{id:string}) => {
   const dispatch = useAppDispatch();
 
 
-  useEffect(()=>{
-    const getFolders = async() => {
+  const getFolders = async() => {
       try{
         const res = await fetch('/api/projects',{
           method: 'POST',
@@ -49,23 +49,30 @@ const Folder = ({id}:{id:string}) => {
         });
         const data = await res.json();
         setData(data);
-        
-        if(data && data.files){
-          const file = data.files[0];
-          if(currentFile === ''){
-            dispatch(setCurrentFile(file.id));
-            dispatch(setCurrentLanguage(file.name));
-          }
-        }
-        if(data.shareId){
-          dispatch(setShareId(data.shareId))
-        }
+
+        return data;
       }
       catch(err){
         console.error(err);
       }
     }
-    getFolders();
+
+  useEffect(()=>{
+    const getReturnedData = async() => {
+      const returnPayload = await getFolders() as FolderProps;
+      if(returnPayload && returnPayload.files){
+          const file = returnPayload.files[0];
+          if(currentFile === ''){
+            dispatch(setCurrentFile(file.id));
+            dispatch(setCurrentLanguage(file.name));
+          }
+        }
+        if(returnPayload.shareId){
+          dispatch(setShareId(returnPayload.shareId))
+        }
+      }
+
+    getReturnedData();
   }, [currentFile, id]);
 
   useEffect(()=>{
@@ -73,6 +80,16 @@ const Folder = ({id}:{id:string}) => {
       dispatch(setProjectId(id));
     }
   }, [id]); 
+
+  useEffect(()=>{
+    socket.on('new-file', ()=>{
+      getFolders();
+    });
+
+    return ()=>{
+      socket.off('new-file');
+    }
+  },[]);
 
   const handleChevs = (e:React.MouseEvent<SVGElement, MouseEvent>) => {
     e.preventDefault();

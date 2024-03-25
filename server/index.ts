@@ -36,9 +36,18 @@ io.on('connection', (socket) => {
         socket.broadcast.to(projectId).emit('user-joined');
     });
 
+    socket.on('new-file', (projectId: string) => {
+        socket.broadcast.to(projectId).emit('new-file');
+    })
+
+    socket.on('code-changed', (data) => {
+        socket.broadcast.to(data.projectId).emit('code-changed', data.value);
+    });
+
     socket.on('disconnect', () => {
-        console.log('User disconnected');
         socket.disconnect();
+        console.log('User disconnected');
+        socket.broadcast.emit('user-left');
     });
 });
 

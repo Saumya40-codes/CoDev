@@ -80,7 +80,10 @@ const EditorMain = () => {
           body: JSON.stringify({projectId, userId})
         });
         const data = await res.json();
-        socket.emit('join-project', projectId);
+        
+        if(res.status === 200 || res.status === 201) {
+          socket.emit('join-project', projectId);
+        }
         console.log(data);
       }
 
@@ -88,9 +91,15 @@ const EditorMain = () => {
     }
   },[shareId]);
 
+  useEffect(()=>{
+    socket.on('code-changed', (value) => {
+      dispatch(setCurrentCode(value));
+    });
+  }, []);
+
   const handleCodeChange = (value: string | undefined, event: editor.IModelContentChangedEvent) => {
     dispatch(setCurrentCode(value));
-
+    socket.emit('code-changed', {projectId, value});
     if(fileSaved) {
       dispatch(setFileSaved(false));
     }

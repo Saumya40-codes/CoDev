@@ -6,6 +6,7 @@ import styles from './newfile.module.css'
 import { useAppSelector, useAppDispatch } from '@/app/lib/redux/hooks';
 import { templates } from '@/app/lib/Apis/templates';
 import { setCurrentFile, setCurrentCode, setCurrentLanguage } from '@/app/lib/redux/features/FileSlice';
+import socket from '@/app/lib/socket/socket';
 
 interface NewFileProps {
   setNewFile: (arg0:boolean)=>void;
@@ -76,6 +77,8 @@ const NewFile = ({setNewFile}:NewFileProps) => {
           setNewFile(false);
           setfileName('');
           setfileType('');
+
+          socket.emit('new-file', projectId);
         }
       }
       catch(err){

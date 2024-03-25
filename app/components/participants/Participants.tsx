@@ -39,17 +39,17 @@ const Participants = () => {
     }
 
     useEffect(() => {
-        const handleUserJoined = async () => {
+        getParticipants();
+
+        const handleUserChange = async () => {
             console.log('User joined');
             await getParticipants();
         };
     
-        socket.on('user-joined', handleUserJoined);
-    
-        return () => {
-            socket.off('user-joined', handleUserJoined);
-        };
-    }, [projectId, getParticipants, socket]);
+        socket.on('user-joined', handleUserChange);
+        socket.on('user-left', handleUserChange);
+
+    }, [socket, projectId]);
 
     
   return (

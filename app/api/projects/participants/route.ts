@@ -19,7 +19,7 @@ export async function POST(req:Request, res: Response) {
     });
 
     if(participantExists){
-        return NextResponse.json({message: "Participant already exists"}, { status: 400 });
+        return NextResponse.json({message: "Participant already exists"}, { status: 200 });
     }
     
     await prisma.participants.create({
