@@ -9,6 +9,7 @@ import { EmailIcon } from '@chakra-ui/icons'
 import { setCurrentCode, setFileSaved } from '@/app/lib/redux/features/FileSlice';
 import { editor } from 'monaco-editor';
 import socket from '@/app/lib/socket/socket';
+import { useCookies } from 'next-client-cookies';
 
 const EditorMain = () => {    
   const currentFile = useAppSelector((state) => state?.file.currentFile);
@@ -18,6 +19,7 @@ const EditorMain = () => {
   const shareId = useAppSelector((state) => state?.project.shareId);
   const projectId = useAppSelector((state) => state?.project.projectId);
   const dispatch = useAppDispatch();
+  const cookies = useCookies();
 
   const handleEditorDidMount = (editor: any, monaco: any) => {
     
@@ -64,9 +66,27 @@ const EditorMain = () => {
     console.log(urlShareId, shareId);
 
     if(urlShareId === shareId) {
-      socket.emit('join-project', projectId);
+      const userId = cookies.get('userId');
+      if(!userId) {
+        return;
+      }
+
+      const addParticipant = async () => {
+        const res = await fetch('/api/projects/participants', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({projectId, userId})
+        });
+        const data = await res.json();
+        socket.emit('join-project', projectId);
+        console.log(data);
+      }
+
+      addParticipant();
     }
-  },[]);
+  },[shareId]);
 
   const handleCodeChange = (value: string | undefined, event: editor.IModelContentChangedEvent) => {
     dispatch(setCurrentCode(value));

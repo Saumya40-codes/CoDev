@@ -7,6 +7,7 @@ import Profile from '../../MainPage/Profile/Profile'
 import { getServerSession } from "next-auth";
 import { authConfig } from '@/app/lib/auth/auth';
 import Menubar from '../Menubar/Menubar'
+import Participants from '../../participants/Participants'
 
 const Navbar = async() => {
 
@@ -27,6 +28,7 @@ const Navbar = async() => {
       </div>
       <div className={styles.btns}>
         <Menubar/>
+        <Participants/>
         {!session ? <Auth/>: <Profile session={session}/>}
       </div>
     </div>

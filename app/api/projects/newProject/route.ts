@@ -14,6 +14,13 @@ export const POST = async(req:Request, res: Response) => {
             }
         });
 
+        await prisma.participants.create({
+            data: {
+                projectId: newProject.id,
+                userId
+            }
+        });
+
         return NextResponse.json({id: newProject.id}, {status: 201});
     }
     catch(error){

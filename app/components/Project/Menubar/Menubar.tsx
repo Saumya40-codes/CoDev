@@ -35,6 +35,7 @@ const Menubar = () => {
           });
 
           const data = await res.json();
+          console.log(data);
           dispatch(setShareId(data.shareId));
         }
         catch(err){

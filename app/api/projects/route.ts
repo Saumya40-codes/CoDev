@@ -9,7 +9,12 @@ export const POST = async (req: Request, res: Response) => {
                 id
             },
             select:{
+                id: true,
                 name: true,
+                createdAt: true,
+                updatedAt: true,
+                userId: true,
+                shareId: true,
                 files: {
                     select: {
                         id: true,

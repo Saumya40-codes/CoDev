@@ -7,6 +7,7 @@ import NewFile from './NewFile/NewFile'
 import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks';
 import { setProjectId } from '@/app/lib/redux/features/ProjectSlice'
 import { setCurrentFile, setCurrentLanguage, setCurrentCode, setFileSaved } from '@/app/lib/redux/features/FileSlice'
+import { setShareId } from '@/app/lib/redux/features/ProjectSlice'
 
 interface FolderProps {
   id: string;
@@ -14,10 +15,12 @@ interface FolderProps {
   createdAt: string;
   updatedAt: string;
   userId: string;
+  shareId: string;
   files: [
     {
       id: string,
-      name: string
+      name: string,
+      language: string
     }
   ];
 }
@@ -29,6 +32,7 @@ const Folder = ({id}:{id:string}) => {
   const[newFile, setNewFile] = useState<boolean>(false);
   const currentFile = useAppSelector((state)=>state?.file?.currentFile);
   const fileSaved = useAppSelector((state)=>state?.file?.fileSaved);
+  const dispatch = useAppDispatch();
 
 
   useEffect(()=>{
@@ -53,6 +57,9 @@ const Folder = ({id}:{id:string}) => {
             dispatch(setCurrentLanguage(file.name));
           }
         }
+        if(data.shareId){
+          dispatch(setShareId(data.shareId))
+        }
       }
       catch(err){
         console.error(err);
@@ -60,8 +67,6 @@ const Folder = ({id}:{id:string}) => {
     }
     getFolders();
   }, [currentFile, id]);
-
-  const dispatch = useAppDispatch();
 
   useEffect(()=>{
     if(id){

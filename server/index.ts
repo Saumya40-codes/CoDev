@@ -29,10 +29,11 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket) => {
-    console.log('User connected');
 
-    socket.on('join-project', (projectId) => {
+    socket.on('join-project', (projectId:string) => {
         socket.join(projectId);
+        console.log('User joined project: ', projectId);
+        socket.broadcast.to(projectId).emit('user-joined');
     });
 
     socket.on('disconnect', () => {

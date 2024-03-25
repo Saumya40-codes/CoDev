@@ -6,6 +6,7 @@ import { CloseIcon } from '@chakra-ui/icons'
 import { useCookies } from 'next-client-cookies';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import socket from '@/app/lib/socket/socket';
 
 const CreateProject = ({setCreateProject}:{setCreateProject:React.Dispatch<React.SetStateAction<boolean>>}) => {
     const cookies = useCookies();
@@ -40,6 +41,7 @@ const CreateProject = ({setCreateProject}:{setCreateProject:React.Dispatch<React
             });
 
             const data = await res.json();
+            socket.emit('join-project', data.id);
             const newProjUrl = `/project/${data.id}`;
             router.push(newProjUrl);
         }
