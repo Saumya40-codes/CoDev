@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/prisma";
 
-export const GET = async (req: Request, res: Response) => {
+export const POST = async (req: Request, res: Response) => {
     try{
         const { projectId } = await req.json();
         const participants = await prisma.participants.findMany({
@@ -19,6 +19,8 @@ export const GET = async (req: Request, res: Response) => {
                 }
             }
         });
+
+        console.log(participants);
 
         return NextResponse.json(participants, { status: 200 });
     }

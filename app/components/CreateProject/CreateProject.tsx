@@ -7,10 +7,13 @@ import { useCookies } from 'next-client-cookies';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import socket from '@/app/lib/socket/socket';
+import { useAppDispatch } from '@/app/lib/redux/hooks';
+import { setShareId } from '@/app/lib/redux/features/ProjectSlice';
 
 const CreateProject = ({setCreateProject}:{setCreateProject:React.Dispatch<React.SetStateAction<boolean>>}) => {
     const cookies = useCookies();
     const userId = cookies.get('userId');
+    const dispatch = useAppDispatch();
     const {data: session} = useSession();
 
     useEffect(()=>{
@@ -40,7 +43,9 @@ const CreateProject = ({setCreateProject}:{setCreateProject:React.Dispatch<React
                 })
             });
 
+            
             const data = await res.json();
+            dispatch(setShareId(null));
             socket.emit('join-project', data.id);
             const newProjUrl = `/project/${data.id}`;
             router.push(newProjUrl);
