@@ -30,9 +30,9 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
 
-    socket.on('join-project', (projectId:string) => {
+    socket.on('join-project', (projectId:string, userId: string) => {
         socket.join(projectId);
-        console.log('User joined project: ', projectId);
+        socket.handshake.query = { projectId, userId};
         io.in(projectId).emit('user-joined');
     });
 
@@ -46,8 +46,8 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         socket.disconnect();
-        console.log('User disconnected');
-        socket.broadcast.emit('user-left');
+        const { projectId, userId } = socket.handshake.query as { projectId: string, userId: string };
+        socket.broadcast.to(projectId).emit('user-left',userId);
     });
 });
 

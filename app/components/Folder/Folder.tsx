@@ -9,6 +9,7 @@ import { setProjectId } from '@/app/lib/redux/features/ProjectSlice'
 import { setCurrentFile, setCurrentLanguage, setCurrentCode, setFileSaved } from '@/app/lib/redux/features/FileSlice'
 import { setShareId } from '@/app/lib/redux/features/ProjectSlice'
 import socket from '@/app/lib/socket/socket'
+import { useSession } from 'next-auth/react'
 
 interface FolderProps {
   id: string;
@@ -34,6 +35,7 @@ const Folder = ({id}:{id:string}) => {
   const currentFile = useAppSelector((state)=>state?.file?.currentFile);
   const fileSaved = useAppSelector((state)=>state?.file?.fileSaved);
   const dispatch = useAppDispatch();
+  const {data: session} = useSession();
 
 
   const getFolders = async() => {
@@ -77,7 +79,7 @@ const Folder = ({id}:{id:string}) => {
 
   useEffect(()=>{
     if(id){
-      dispatch(setProjectId(id));
+      dispatch(setProjectId({projectId: id, user:session?.user?.email}));
     }
   }, [id]); 
 

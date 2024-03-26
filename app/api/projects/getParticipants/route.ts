@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/prisma";
+import { client } from "@/app/lib/redis/db";
 
 export const POST = async (req: Request, res: Response) => {
     try{
@@ -20,7 +21,11 @@ export const POST = async (req: Request, res: Response) => {
             }
         });
 
-        return NextResponse.json(participants, { status: 200 });
+        const availableUser = await client.sMembers(`project:${projectId}`);
+
+        const filterParticipants = participants.filter((val) => availableUser.includes(val.user.id));
+
+        return NextResponse.json(filterParticipants, { status: 200 });
     }
     catch(err){
         return NextResponse.json({message: "Internal Server Error"}, { status: 500 });

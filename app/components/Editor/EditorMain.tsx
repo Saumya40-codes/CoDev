@@ -19,6 +19,7 @@ const EditorMain = () => {
   const fileSaved = useAppSelector((state) => state?.file.fileSaved);
   const shareId = useAppSelector((state) => state?.project.shareId);
   const projectId = useAppSelector((state) => state?.project.projectId);
+  const projectOwner = useAppSelector((state) => state.project.projectAdmin);
   const dispatch = useAppDispatch();
   const cookies = useCookies();
   const {data: session} = useSession();
@@ -74,6 +75,11 @@ const EditorMain = () => {
       getUserId(); 
     }
 
+    if(session?.user?.email === projectOwner){
+      socket.emit('join-project', projectId,userId);
+      return;
+    }
+
     const path = window.location.href;
     const url = new URL(path);
     const urlShareId = url.searchParams.get('shareId');
@@ -101,7 +107,7 @@ const EditorMain = () => {
         const data = await res.json();
         
         if(res.status === 200 || res.status === 201) {
-          socket.emit('join-project', projectId);
+          socket.emit('join-project', projectId,userId);
         }
         console.log(data);
       }
