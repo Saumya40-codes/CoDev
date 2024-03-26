@@ -33,7 +33,7 @@ io.on('connection', (socket) => {
     socket.on('join-project', (projectId:string) => {
         socket.join(projectId);
         console.log('User joined project: ', projectId);
-        socket.broadcast.to(projectId).emit('user-joined');
+        io.in(projectId).emit('user-joined');
     });
 
     socket.on('new-file', (projectId: string) => {
@@ -41,7 +41,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('code-changed', (data) => {
-        socket.broadcast.to(data.projectId).emit('code-changed', data.value);
+        io.in(data.projectId).emit('code-changed', data);
     });
 
     socket.on('disconnect', () => {

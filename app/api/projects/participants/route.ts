@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/prisma";
+import { client } from "@/app/lib/redis/db";
 
 export async function POST(req:Request, res: Response) {
   try{
@@ -28,6 +29,8 @@ export async function POST(req:Request, res: Response) {
             userId
         }
     });
+
+    await client.sAdd(`project:${projectId}`,userId);
 
     return NextResponse.json({message: "Participant added successfully"}, { status: 200 });
     }

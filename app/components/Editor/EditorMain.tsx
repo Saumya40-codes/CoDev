@@ -10,6 +10,7 @@ import { setCurrentCode, setFileSaved } from '@/app/lib/redux/features/FileSlice
 import { editor } from 'monaco-editor';
 import socket from '@/app/lib/socket/socket';
 import { useCookies } from 'next-client-cookies';
+import { useSession } from 'next-auth/react';
 
 const EditorMain = () => {    
   const currentFile = useAppSelector((state) => state?.file.currentFile);
@@ -20,6 +21,7 @@ const EditorMain = () => {
   const projectId = useAppSelector((state) => state?.project.projectId);
   const dispatch = useAppDispatch();
   const cookies = useCookies();
+  const {data: session} = useSession();
 
   const handleEditorDidMount = (editor: any, monaco: any) => {
     
@@ -55,6 +57,23 @@ const EditorMain = () => {
   }
 
   useEffect(()=>{
+    const userId = cookies.get('userId');
+
+    if(!userId){
+        const getUserId = async() => {
+        const res = await fetch(`api/auth/${session?.user?.email}/getUser`);
+
+        if(res.status === 404) {
+          return;
+        }
+
+        const data = await res.json();
+        cookies.set('userId', data.id);
+      }
+      
+      getUserId(); 
+    }
+
     const path = window.location.href;
     const url = new URL(path);
     const urlShareId = url.searchParams.get('shareId');
@@ -66,7 +85,7 @@ const EditorMain = () => {
     console.log(urlShareId, shareId);
 
     if(urlShareId === shareId) {
-      const userId = cookies.get('userId');
+      
       if(!userId) {
         return;
       }

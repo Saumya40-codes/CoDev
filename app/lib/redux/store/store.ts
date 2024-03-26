@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import FileReducer from "../features/FileSlice";
 import ProjectReducer from "../features/ProjectSlice";
+import EditingReducer from "../features/EditingSlice";
 
 export const store = configureStore({
     reducer: {
         file: FileReducer,
-        project: ProjectReducer
+        project: ProjectReducer,
+        editing: EditingReducer
     },
 });
 

@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useAppSelector, useAppDispatch } from '@/app/lib/redux/hooks';
 import { setShareId } from '@/app/lib/redux/features/ProjectSlice';
-import { AddIcon } from '@chakra-ui/icons';
+import { AddIcon, CopyIcon, CheckIcon } from '@chakra-ui/icons';
 import {
     Popover,
     PopoverTrigger,
@@ -22,6 +22,7 @@ const Menubar = () => {
     const shareId = useAppSelector(state => state.project.shareId);
     const projectId = useAppSelector(state => state.project.projectId);
     const dispatch = useAppDispatch();
+    const [copied,setCopied] = useState<boolean>(false);
 
     const shareProject = async (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
@@ -35,34 +36,44 @@ const Menubar = () => {
           });
 
           const data = await res.json();
-          console.log(data);
-          dispatch(setShareId(data.shareId));
+          const customId = `${window?.location.href}?shareId=${data.shareId}`
+          dispatch(setShareId(customId));
         }
         catch(err){
           console.log(err);
         }
       }
 
+      const handlecopiedClick = () =>{
+        navigator.clipboard.writeText(shareId || '');
+        setCopied((prevSetCopied)=>!prevSetCopied);
+
+        setTimeout(()=>{
+          setCopied((prevSetCopied)=>!prevSetCopied);
+        },2000);
+      }
+
   return (
     <div className={styles.menub}>
     <Popover>
       <PopoverTrigger>
-        <AddIcon color='white' className={styles.addIcon}/>
+        <AddIcon color='white' className={styles.addIcon} w={10} h={10}/>
       </PopoverTrigger>
       <PopoverContent marginRight='20px' background='hsl(212 18% 14%)' color='#0A0909' fontWeight='bold'>
         <PopoverArrow />
-        <PopoverCloseButton />
+        <PopoverCloseButton color='whiteAlpha.800' marginTop='7px' />
         <PopoverHeader>
-          Collaborate with others!
+          <span className={styles.text}>Collaborate with others!</span>
         </PopoverHeader>
         { shareId &&(
-        <PopoverBody>
-          <input type="text" value={shareId} readOnly/>
+        <PopoverBody display='flex' flexDirection='row' gap='15px'>
+          <input type="text" value={shareId} readOnly className={styles.inpt}/>
+          {copied? <CheckIcon color='green.500' marginTop='7px' /> : <CopyIcon color='whiteAlpha.800' marginTop='7px' cursor='pointer' onClick={handlecopiedClick} />}
         </PopoverBody>
         )
         }
         <PopoverFooter>
-          <button onClick={(e)=> shareProject(e)} disabled={shareId !== null}>
+          <button onClick={(e)=> shareProject(e)} disabled={shareId !== null} className={styles.btn}>
             Invite other devs
           </button>
         </PopoverFooter>

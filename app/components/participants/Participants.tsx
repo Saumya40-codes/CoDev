@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import socket from '@/app/lib/socket/socket';
 import { Avatar, AvatarGroup } from '@chakra-ui/react';
 import { useAppSelector } from '@/app/lib/redux/hooks';
+import { Tooltip } from '@chakra-ui/react';
 
 
 interface ParticipantsProps {
@@ -38,9 +39,11 @@ const Participants = () => {
         }
     }
 
-    useEffect(() => {
+    useEffect(()=>{
         getParticipants();
+    },[]);
 
+    useEffect(() => {
         const handleUserChange = async () => {
             console.log('User joined');
             await getParticipants();
@@ -56,7 +59,9 @@ const Participants = () => {
     <div>
       <AvatarGroup size='md' max={2}>
             {participants?.map((val) => (
+                <Tooltip label={val.user.name} >
                 <Avatar key={val.user.id} name={val.user.name} src={val.user.image} />
+                </Tooltip>
             ))}
       </AvatarGroup>
     </div>

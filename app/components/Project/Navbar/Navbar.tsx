@@ -1,17 +1,20 @@
+'use client'
+
 import React from 'react'
 import logo from '../../../../styles/images/logo.png'
 import styles from './navbar.module.css'
 import Link from 'next/link'
 import Auth from '../../Auth/Auth'
 import Profile from '../../MainPage/Profile/Profile'
-import { getServerSession } from "next-auth";
-import { authConfig } from '@/app/lib/auth/auth';
 import Menubar from '../Menubar/Menubar'
 import Participants from '../../participants/Participants'
+import { useSession } from 'next-auth/react'
+import { useAppSelector } from '@/app/lib/redux/hooks'
 
-const Navbar = async() => {
+const Navbar = () => {
 
-  const session = await getServerSession(authConfig);
+  const {data: session} = useSession();
+  const shareId = useAppSelector(state=>state?.project?.shareId);
 
   return (
     <div className={styles.mainNav}>
@@ -28,7 +31,7 @@ const Navbar = async() => {
       </div>
       <div className={styles.btns}>
         <Menubar/>
-        <Participants/>
+        {shareId && <Participants/>}
         {!session ? <Auth/>: <Profile session={session}/>}
       </div>
     </div>
