@@ -4,7 +4,7 @@ import React from 'react';
 import styles from './auth.module.css';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import google_img from '../../../../styles/images/google_img.png'
+import google_img from '../../../styles/images/google_img.png';
 
 const Auth = () => {
   const router = useRouter();
