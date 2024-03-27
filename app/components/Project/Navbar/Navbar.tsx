@@ -32,7 +32,7 @@ const Navbar = () => {
       <div className={styles.btns}>
         <Menubar/>
         {shareId && <Participants/>}
-        {!session ? <Auth/>: <Profile session={session}/>}
+        {!session ? <Auth/>: <Profile />}
       </div>
     </div>
   )
