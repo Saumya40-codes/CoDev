@@ -7,12 +7,11 @@ import Profile from '../../MainPage/Profile/Profile'
 import Menubar from '../Menubar/Menubar'
 import Participants from '../../participants/Participants'
 import { getServerSession } from "next-auth";
-import { authConfig } from '@/app/lib/auth/auth';import { useAppSelector } from '@/app/lib/redux/hooks'
+import { authConfig } from '@/app/lib/auth/auth';
 
 const Navbar = async() => {
 
   const session = await getServerSession(authConfig);  
-  const shareId = useAppSelector(state=>state?.project?.shareId);
 
   return (
     <div className={styles.mainNav}>
@@ -29,7 +28,7 @@ const Navbar = async() => {
       </div>
       <div className={styles.btns}>
         <Menubar/>
-        {shareId && <Participants/>}
+        <Participants/>
         {
           session ? <Profile session={session}/> : <Auth/>
         }

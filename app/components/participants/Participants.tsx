@@ -22,6 +22,7 @@ const Participants = () => {
 
     const projectId = useAppSelector(state => state.project.projectId);
     const [participants, setParticipants] = useState<ParticipantsProps[]>();
+    const shareId = useAppSelector(state => state.project.shareId);
     // const [availParticipants, setAvailParticipants] = useState<>();
 
     const getParticipants = async () => {
@@ -72,13 +73,15 @@ const Participants = () => {
     
   return (
     <div>
-      <AvatarGroup size='md' max={2}>
-            {participants?.map((val) => (
-                <Tooltip label={val.user.name} >
-                <Avatar key={val.user.id} name={val.user.name} src={val.user.image} />
-                </Tooltip>
-            ))}
-      </AvatarGroup>
+      {shareId && (
+        <AvatarGroup size='md' max={2}>
+        {participants?.map((val) => (
+            <Tooltip label={val.user.name} >
+            <Avatar key={val.user.id} name={val.user.name} src={val.user.image} />
+            </Tooltip>
+        ))}
+        </AvatarGroup>
+      )}
     </div>
   )
 }
