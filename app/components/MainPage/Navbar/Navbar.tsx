@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import logo from '../../../../styles/images/logo.png'
 import styles from './navbar.module.css'
 import Link from 'next/link'
@@ -11,6 +11,14 @@ import { useSession } from 'next-auth/react'
 const Navbar = () => {
 
     const {data: session, status} = useSession(); 
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    
+
+    useEffect(()=>{
+        if(status === 'authenticated'){
+            setIsAuthenticated(true);
+        }
+    }, [status]);
 
   return (
     <div className={styles.mainNav}>
@@ -26,7 +34,7 @@ const Navbar = () => {
         </span>
       </div>
       <div className={styles.btns}>
-      {status === 'authenticated' ? <Profile/> : <Auth/>}
+        {isAuthenticated ? <Profile/> : <Auth/>}
       </div>
     </div>
   )

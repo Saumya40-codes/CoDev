@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import logo from '../../../../styles/images/logo.png'
 import styles from './navbar.module.css'
 import Link from 'next/link'
@@ -14,6 +14,15 @@ import { useAppSelector } from '@/app/lib/redux/hooks'
 const Navbar = () => {
 
   const {data: session, status} = useSession();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+    
+
+  useEffect(()=>{
+      if(status === 'authenticated'){
+          setIsAuthenticated(true);
+      }
+  }, [status]);
+    
   const shareId = useAppSelector(state=>state?.project?.shareId);
 
   return (
@@ -32,7 +41,7 @@ const Navbar = () => {
       <div className={styles.btns}>
         <Menubar/>
         {shareId && <Participants/>}
-        {status === 'authenticated' ? <Profile/> : <Auth/>}
+        {isAuthenticated ? <Profile/> : <Auth/>}
       </div>
     </div>
   )
