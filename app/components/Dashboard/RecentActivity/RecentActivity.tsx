@@ -28,6 +28,21 @@ const RecentActivity = () => {
     const router = useRouter();
 
     useEffect(()=>{
+        if(!userId){
+            const getUserId = async() => {
+            const res = await fetch(`api/auth/${session?.user?.email}/getUser`);
+    
+            if(res.status === 404) {
+              return;
+            }
+    
+            const data = await res.json();
+            cookies.set('userId', data.id);
+          }
+          
+          getUserId(); 
+        }
+        
         const getProjects = async() => {
             try{
                 const res = await fetch(`/api/user/${userId}/projects`,{
