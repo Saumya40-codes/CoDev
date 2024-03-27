@@ -13,7 +13,7 @@ import { useAppSelector } from '@/app/lib/redux/hooks'
 
 const Navbar = () => {
 
-  const {data: session} = useSession();
+  const {data: session, status} = useSession();
   const shareId = useAppSelector(state=>state?.project?.shareId);
 
   return (
@@ -32,7 +32,7 @@ const Navbar = () => {
       <div className={styles.btns}>
         <Menubar/>
         {shareId && <Participants/>}
-        {!session ? <Auth/>: <Profile />}
+        {status === 'loading' ? <div>Loading...</div> : !session ? <Auth/>: <Profile />}
       </div>
     </div>
   )
