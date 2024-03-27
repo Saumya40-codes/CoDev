@@ -65,7 +65,7 @@ const RecentActivity = () => {
         </span>
         <div className={styles.projects}>
             <div className={styles.updatedAt}>
-            {mainData?.projects &&<span>
+            {mainData?.projects && mainData?.projects.length > 0  && <span>
                 Updated At
             </span>}
             </div>
