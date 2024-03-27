@@ -7,7 +7,7 @@ generator client {
 
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL_VERCEL")
 }
 
@@ -47,7 +47,7 @@ model Files{
 
 model Codes{
   id       String      @id @default(uuid())
-  code     String? @db.LongText
+  code     String? @db.Text
   file     Files       @relation(fields: [fileId], references: [id])
   fileId   String  @unique 
 }
