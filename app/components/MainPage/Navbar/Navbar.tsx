@@ -25,7 +25,7 @@ const Navbar = async() => {
         </span>
       </div>
       {
-        session ? <Profile/> : <Auth/>
+        session ? <Profile session={session}/> : <Auth/>
       }
     </div>
   )

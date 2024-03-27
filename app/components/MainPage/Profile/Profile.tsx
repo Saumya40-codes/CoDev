@@ -3,6 +3,7 @@
 import React from 'react'
 import styles from './profile.module.css'
 import { signOut } from 'next-auth/react';
+import { Session } from 'next-auth';
 import {
   Popover,
   PopoverTrigger,
@@ -13,12 +14,10 @@ import {
   PopoverArrow,
   PopoverCloseButton,
 } from '@chakra-ui/react'
-import { useSession } from 'next-auth/react';
 import { useCookies } from 'next-client-cookies';
 
-const Profile = () => {
+const Profile = ({ session }: { session: Session }) => {
   const cookies = useCookies();
-  const {data: session} = useSession();
 
   const handleSignOut = async() => {
     try{

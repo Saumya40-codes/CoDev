@@ -31,7 +31,7 @@ const Navbar = async() => {
         <Menubar/>
         {shareId && <Participants/>}
         {
-          session ? <Profile/> : <Auth/>
+          session ? <Profile session={session}/> : <Auth/>
         }
       </div>
     </div>
