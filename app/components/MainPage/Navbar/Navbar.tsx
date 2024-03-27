@@ -15,10 +15,10 @@ const Navbar = () => {
     
 
     useEffect(()=>{
-        if(status === 'authenticated'){
-            setIsAuthenticated(true);
-        }
-    }, [status]);
+      if(session?.user){
+          setIsAuthenticated(true);
+      }
+  }, [session]);
 
   return (
     <div className={styles.mainNav}>

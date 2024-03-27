@@ -18,10 +18,10 @@ const Navbar = () => {
     
 
   useEffect(()=>{
-      if(status === 'authenticated'){
+      if(session?.user){
           setIsAuthenticated(true);
       }
-  }, [status]);
+  }, [session]);
     
   const shareId = useAppSelector(state=>state?.project?.shareId);
 
