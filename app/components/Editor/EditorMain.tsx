@@ -90,8 +90,6 @@ const EditorMain = () => {
       return;
     }
 
-    console.log(urlShareId, shareId);
-
     if(urlShareId === shareId) {
       
       if(!userId) {
@@ -111,7 +109,6 @@ const EditorMain = () => {
         if(res.status === 200 || res.status === 201) {
           socket.emit('join-project', projectId,userId);
         }
-        console.log(data);
       }
 
       addParticipant();

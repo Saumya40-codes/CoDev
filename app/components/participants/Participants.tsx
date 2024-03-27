@@ -36,9 +36,7 @@ const Participants = () => {
 
 
             const data = await res.json();
-            console.log(data);
             setParticipants(data);
-            console.log(participants);
         }
         catch (err) {
             console.log(err);

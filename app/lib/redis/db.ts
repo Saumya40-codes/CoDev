@@ -9,6 +9,7 @@ const client = createClient({
 });
 
 client.on('error', (error) => {
+    client.disconnect();
     console.error(error);
 });
 

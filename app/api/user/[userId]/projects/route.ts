@@ -15,12 +15,6 @@ export const GET = async (req: Request, { params }: { params: { userId: string }
                         name: true,
                         createdAt: true,
                         updatedAt: true,
-                        files: {
-                            select:{
-                                id: true,
-                                language: true
-                            }
-                        }
                     },
                     orderBy: {
                         updatedAt: 'desc'
@@ -29,11 +23,42 @@ export const GET = async (req: Request, { params }: { params: { userId: string }
             }
         });
 
-        if(!user){
-            return NextResponse.json({error: 'User not found'}, {status: 404});
-        }
+        const participatedProjects = await prisma.participants.findMany({
+            where:{
+                userId: params.userId
+            },
+            select:{
+                project:{
+                    select:{
+                        id: true,
+                        name: true,
+                        createdAt: true,
+                        updatedAt: true
+                    }
+                }
+            }
+        });
 
-        return NextResponse.json(user, {status: 200});
+        const userProject = user !== null ?user.projects.map((project) => ({...project, type: 'owner'})) : [];
+
+        const filterParticipant = participatedProjects.filter((project) => !userProject.some((userProj) => userProj.id === project.project.id));
+
+        const allProjects = [
+            ...userProject, 
+            ...filterParticipant.map((project) => ({...project.project, type: 'participant'}))
+        ];
+
+        allProjects.sort((a,b) => {
+            if(a.updatedAt > b.updatedAt){
+                return -1;
+            }
+            if(a.updatedAt < b.updatedAt){
+                return 1;
+            }
+            return 0;
+        });
+
+        return NextResponse.json({projects: allProjects}, {status: 200});
     }
     catch(err){
         console.log(err);

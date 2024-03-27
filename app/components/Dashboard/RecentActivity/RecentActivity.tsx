@@ -7,26 +7,21 @@ import { useSession } from 'next-auth/react';
 import { ChevronRightIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/navigation';
 
-interface RecentActivityProps {
+
+interface DataProps{
     projects: [
         {
-            id: string,
-            name: string,
-            createdAt?: string,
-            updatedAt: string,
-            files : [
-                {
-                    id: string,
-                    language: string
-                }
-            ]
+            id: string;
+            name: string;
+            updatedAt: string;
+            type: string;
         }
     ]
 }
 
 const RecentActivity = () => {
 
-    const[datas, setDatas] = useState<RecentActivityProps>();
+    const[mainData, setMainData] = useState<DataProps>();
     const cookies = useCookies();
     const userId = cookies.get('userId');
     const {data: session} = useSession();
@@ -39,9 +34,7 @@ const RecentActivity = () => {
                     method: 'GET'
                 });
                 const data = await res.json();
-                setDatas(data);
-                console.log(data);
-                console.log(datas);
+                setMainData(data);
             }
             catch(err){
                 console.error(err);
@@ -55,39 +48,34 @@ const RecentActivity = () => {
         <span>
             Recent Activity
         </span>
-        {datas && datas.projects.length > 0 ? datas?.projects?.map((project, index) => (
-        <div className={styles.projMain}>    
-            <div key={index} className={styles.project}>
-                <div className={styles.projectDetails}>
-                    <span>{project.name}</span>
-                    <ul>
-                    {project.files.map((file, index) => (
-                        <span key={index}>
-                            <li>{file.language}</li>
+        <div className={styles.projects}>
+            <div className={styles.updatedAt}>
+            {mainData?.projects &&<span>
+                Updated At
+            </span>}
+            </div>
+            {mainData?.projects?.map((project) => (
+                <div key={project.id} className={styles.project} onClick={()=>router.push(`/project/${project.id}`)}>
+                    <div>
+                    {project.type === 'owner' ? (
+                        <span>
+                           You updated your project <span className={styles.projectName}>{project.name}</span>
                         </span>
-                    ))}
-                    </ul>
+                    ) : (
+                        <span>
+                            You collaborated to a project <span className={styles.projectName}>{project.name}</span>
+                        </span>
+                    )}
+                    </div>
+                    <div>
+                        <div>
+                            {project.updatedAt}
+                        </div>
+                    </div>
                 </div>
-                <div className={styles.participants}> 
-                    <span>Participants</span>
-                    <img src={session?.user?.image ?? ''} alt="users" className={styles.participantsImg}/>
-                </div>
-            </div>
-            <div className={styles.view}>
-                <button className={styles.viewBtn} onClick={()=> router.push(`/project/${project.id}`)}>
-                    View <ChevronRightIcon/>
-                </button>
-            </div>
-        </div>    
-        )) : (
-            <div>
-                <span>
-                    No Recent Activity Found
-                </span>
-            </div>
-        )}
+            ))}
     </div>
-  )
-}
+    </div>
+    )}
 
 export default RecentActivity
