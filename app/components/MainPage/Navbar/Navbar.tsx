@@ -1,16 +1,15 @@
-'use client'
-
 import React from 'react'
 import logo from '../../../../styles/images/logo.png'
 import styles from './navbar.module.css'
 import Link from 'next/link'
 import Auth from '../../Auth/Auth'
 import Profile from '../Profile/Profile'
-import { useSession } from 'next-auth/react'
+import { getServerSession } from "next-auth";
+import { authConfig } from '@/app/lib/auth/auth';
 
-const Navbar = () => {
+const Navbar = async() => {
 
-    const {data: session, status} = useSession(); 
+    const session = await getServerSession(authConfig);
 
   return (
     <div className={styles.mainNav}>
@@ -26,7 +25,7 @@ const Navbar = () => {
         </span>
       </div>
       {
-        status === 'loading' ? <div>Loading...</div> : session?.user ? <Profile/> : <Auth/>
+        session ? <Profile/> : <Auth/>
       }
     </div>
   )
