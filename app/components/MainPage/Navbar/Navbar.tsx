@@ -10,7 +10,7 @@ import { useSession } from 'next-auth/react'
 
 const Navbar = () => {
 
-    const {data: session} = useSession(); 
+    const {data: session, status} = useSession(); 
 
   return (
     <div className={styles.mainNav}>
@@ -26,7 +26,7 @@ const Navbar = () => {
         </span>
       </div>
       <div className={styles.btns}>
-        {!session ? <Auth/>: <Profile />}
+      {status === 'authenticated' ? <Profile/> : <Auth/>}
       </div>
     </div>
   )

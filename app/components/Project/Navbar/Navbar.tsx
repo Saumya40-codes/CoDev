@@ -32,7 +32,7 @@ const Navbar = () => {
       <div className={styles.btns}>
         <Menubar/>
         {shareId && <Participants/>}
-        {status === 'loading' ? <div>Loading...</div> : !session ? <Auth/>: <Profile />}
+        {status === 'authenticated' ? <Profile/> : <Auth/>}
       </div>
     </div>
   )
