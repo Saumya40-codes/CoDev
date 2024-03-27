@@ -68,3 +68,9 @@
 .viewBtn:hover{
     box-shadow: 0 0 14px rgba(224, 213, 213, 0.1);
 }
+
+.recProjects span{
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}

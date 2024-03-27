@@ -10,6 +10,7 @@ import { setCurrentFile, setCurrentLanguage, setCurrentCode, setFileSaved } from
 import { setShareId } from '@/app/lib/redux/features/ProjectSlice'
 import socket from '@/app/lib/socket/socket'
 import { useSession } from 'next-auth/react'
+import { Tooltip } from '@chakra-ui/react'
 
 interface FolderProps {
   id: string;
@@ -116,7 +117,7 @@ const Folder = ({id}:{id:string}) => {
         const data = await res.json();
 
         dispatch(setCurrentLanguage(data.language));
-        dispatch(setCurrentCode(data.code.code));
+        dispatch(setCurrentCode({fileId, code: data.code.code}));
         dispatch(setCurrentFile(fileId));
         dispatch(setFileSaved(true));
       }
@@ -156,7 +157,11 @@ const Folder = ({id}:{id:string}) => {
                   </div>
                   <div key={file?.id} className={styles.file}>
                     <span onClick={(e)=>handleFileChange(e,file.id,file.name)} className={styles.fileNm}>{file?.name}</span>
-                    {!fileSaved && file.id === currentFile && <WarningIcon marginLeft='40px' />}
+                    {!fileSaved && file.id === currentFile && (
+                      <Tooltip label="File not saved. Press Ctrl Q" aria-label="A tooltip">
+                        <WarningIcon color="red.500" marginLeft='10px' />
+                      </Tooltip>
+                    )}
                   </div>
                 </div>
               )

@@ -55,7 +55,7 @@ const RecentActivity = () => {
         <span>
             Recent Activity
         </span>
-        {datas && datas?.projects?.map((project, index) => (
+        {datas && datas.projects.length > 0 ? datas?.projects?.map((project, index) => (
         <div className={styles.projMain}>    
             <div key={index} className={styles.project}>
                 <div className={styles.projectDetails}>
@@ -79,7 +79,13 @@ const RecentActivity = () => {
                 </button>
             </div>
         </div>    
-        ))}
+        )) : (
+            <div>
+                <span>
+                    No Recent Activity Found
+                </span>
+            </div>
+        )}
     </div>
   )
 }

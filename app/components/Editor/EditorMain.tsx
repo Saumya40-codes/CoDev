@@ -7,6 +7,7 @@ import logo from '../../../styles/images/logo.png';
 import styles from './editor.module.css';
 import { EmailIcon } from '@chakra-ui/icons'
 import { setCurrentCode, setFileSaved } from '@/app/lib/redux/features/FileSlice';
+import { setFileUser } from '@/app/lib/redux/features/EditingSlice';
 import { editor } from 'monaco-editor';
 import socket from '@/app/lib/socket/socket';
 import { useCookies } from 'next-client-cookies';
@@ -20,6 +21,7 @@ const EditorMain = () => {
   const shareId = useAppSelector((state) => state?.project.shareId);
   const projectId = useAppSelector((state) => state?.project.projectId);
   const projectOwner = useAppSelector((state) => state.project.projectAdmin);
+  const fileUserId = useAppSelector((state) => state.editing.fileUserMap);
   const dispatch = useAppDispatch();
   const cookies = useCookies();
   const {data: session} = useSession();
@@ -118,26 +120,48 @@ const EditorMain = () => {
 
   useEffect(()=>{
     socket.on('code-changed', (value) => {
-      dispatch(setCurrentCode(value));
+      dispatch(setCurrentCode({fileId: value.fileId, code: value.value}));
     });
   }, []);
 
   const handleCodeChange = (value: string | undefined, event: editor.IModelContentChangedEvent) => {
-    dispatch(setCurrentCode(value));
-    socket.emit('code-changed', {projectId, value});
+    dispatch(setCurrentCode({fileId: currentFile, code: value}));
+    dispatch(setFileUser({name: session?.user?.name ,fileId: currentFile}));
+    socket.emit('code-changed', {projectId,fileId: currentFile, value});
     if(fileSaved) {
       dispatch(setFileSaved(false));
     }
   }
 
-  const handleCtrlQ = (event: React.KeyboardEvent) => {
+  const handleCtrlQ = async(event: React.KeyboardEvent) => {
     if(event.ctrlKey && event.key === 'q') {
       dispatch(setFileSaved(true));
+
+      if(!currentFile) {
+        return;
+      }
+
+      await fetch('/api/file/addCode', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({fileId: currentFile, code: currentCode[currentFile]})
+      });
+      return;
     }
   }
 
   return (
     <div style={{width:"100vw", resize:'both', overflow:'auto'}} onKeyDown={handleCtrlQ}>
+      {shareId && (<div className={styles.shareIdBlock}>
+        {currentFile && fileUserId[currentFile] && (
+          <span>
+            <span className={styles.editingUser}>{fileUserId[currentFile]} </span>
+            is Editing...</span>
+        )} 
+      </div>)
+      }
       {currentFile ? (<Editor
         height="100vh"
         width="100%"
@@ -145,7 +169,7 @@ const EditorMain = () => {
         language={currentLanguage}
         onMount={handleEditorDidMount}
         onChange={handleCodeChange}
-        value={currentCode}
+        value={currentCode[currentFile]}
         theme="my-theme"
       />): (
         <div className={styles.imgBlock}>

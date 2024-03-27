@@ -71,7 +71,7 @@ const NewFile = ({setNewFile}:NewFileProps) => {
   
         if(res.status === 200){
           dispatch(setCurrentFile(data.fileId));
-          dispatch(setCurrentCode(templates[fileType as keyof typeof templates]));
+          dispatch(setCurrentCode({fileId: data.fileId, code: templates[fileType as keyof typeof templates]}));
           dispatch(setCurrentLanguage(fileType));
 
           setNewFile(false);

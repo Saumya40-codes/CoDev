@@ -20,6 +20,7 @@ export async function POST(req:Request, res: Response) {
     });
 
     if(participantExists){
+        await client.sAdd(`project:${projectId}`,userId);
         return NextResponse.json({message: "Participant already exists"}, { status: 200 });
     }
     
@@ -31,7 +32,6 @@ export async function POST(req:Request, res: Response) {
     });
 
     await client.sAdd(`project:${projectId}`,userId);
-
     return NextResponse.json({message: "Participant added successfully"}, { status: 200 });
     }
     catch(err){
