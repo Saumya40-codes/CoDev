@@ -44,31 +44,31 @@ const Participants = () => {
         }
     }
 
+    const handleUserLeft = async (user_id: string) => {
+        const res = await fetch('/api/projects/removeParticipant', {
+            method: 'POST',
+            headers : {
+                'Content-Type': 'application/json'
+            },
+            body : JSON.stringify({projectId, userId: user_id})
+        });
+
+        if(res.status === 200){
+            await getParticipants();
+        }
+    }
+
     useEffect(() => {
         const handleUserChange = async () => {
             await getParticipants();
         };
-
-        const handleUserLeft = async (user_id: string) => {
-            const res = await fetch('/api/projects/removeParticipant', {
-                method: 'POST',
-                headers : {
-                    'Content-Type': 'application/json'
-                },
-                body : JSON.stringify({projectId, userId: user_id})
-            });
-
-            if(res.status === 200){
-                await getParticipants();
-            }
-        }
-    
+        
         socket.on('user-joined', handleUserChange);
-        socket.on('user-left', (user_id: string) => {
-            handleUserLeft(user_id);
+        socket.on('user-left', async (user_id: string) => {
+            await handleUserLeft(user_id);
         });
 
-    }, [socket, projectId]);
+    }, [socket, projectId, shareId]);
 
     
   return (
