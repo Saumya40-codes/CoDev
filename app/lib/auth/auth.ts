@@ -13,7 +13,7 @@ export const authConfig: NextAuthOptions = {
     callbacks:{  
         async signIn({ user }) {
             if(user){
-                const Existinguser = await prisma.user.findFirst({
+                const Existinguser = await prisma.user.findUnique({
                     where:{
                         email: user.email as string
                     }
