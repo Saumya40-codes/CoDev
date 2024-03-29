@@ -24,7 +24,7 @@ codev is a rich code editor designed for developers to collaborate seamlessly on
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/Saumya40-codes/CoDev.git
+git clone https://github.com/Saumya40-codes/CoDev.git -b localhost-setup
 ```
 2. Install Dependencies
 ```bash
