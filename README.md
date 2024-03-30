@@ -2,6 +2,42 @@
 
 codev is a rich code editor designed for developers to collaborate seamlessly on projects, create different files and codes, and invite other developers to join their projects. With real-time updates, users can see who has joined or left the project, as well as who is currently editing the code.
 
+## Demo
+
+1. Create a Project
+
+
+
+https://github.com/Saumya40-codes/CoDev/assets/115284013/4fd9487c-2fe7-46a7-8dc3-42957d2abeab
+
+
+
+2. Create as many as files
+
+
+
+https://github.com/Saumya40-codes/CoDev/assets/115284013/76cb64b4-14f3-41e7-bbf6-8d2e25e0b2be
+
+
+
+
+3. Collab with other devs
+
+
+https://github.com/Saumya40-codes/CoDev/assets/115284013/2b9713e2-3914-41bf-b4bf-adb655060ec5
+
+
+
+
+4. Work by Collab
+
+
+
+https://github.com/Saumya40-codes/CoDev/assets/115284013/43cfbfca-b935-4e4f-ba64-1e17059c742c
+
+
+
+
 ## Features
 
 - Real-time collaboration: Multiple developers can work on the same project simultaneously, with changes reflected instantly.
@@ -50,8 +86,13 @@ HOST_ENV=dev
 npx prisma generate
 ```
 ```bash
+
+
 npx prisma migrate dev --name init --create-only
 ```
 ```bash
 npx prisma migrate deploy
 ```
+
+### In progress
+Code **compiling** will soon be available!
