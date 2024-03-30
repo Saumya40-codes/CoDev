@@ -59,16 +59,17 @@ const Participants = () => {
     }
 
     useEffect(() => {
-        const handleUserChange = async () => {
-            await getParticipants();
-        };
-        
-        socket.on('user-joined', handleUserChange);
-        socket.on('user-left', async (user_id: string) => {
-            await handleUserLeft(user_id);
+        socket.on('user-joined', getParticipants);
+        socket.on('user-left', (user_id: string) => {
+            handleUserLeft(user_id);
         });
 
-    }, [socket, projectId, shareId]);
+        return () => {
+            socket.off('user-joined');
+            socket.off('user-left');
+        }
+
+    }, [projectId, shareId]);
 
     
   return (

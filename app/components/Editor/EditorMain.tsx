@@ -60,7 +60,8 @@ const EditorMain = () => {
   }
 
   useEffect(()=>{
-    const userId = cookies.get('userId');
+    if(shareId && projectId){
+      const userId = cookies.get('userId');
 
     if(!userId){
         const getUserId = async() => {
@@ -91,7 +92,6 @@ const EditorMain = () => {
     }
 
     if(urlShareId === shareId) {
-      
       if(!userId) {
         return;
       }
@@ -106,25 +106,31 @@ const EditorMain = () => {
         });
         const data = await res.json();
         
-        if(res.status === 200 || res.status === 201) {
+        if(data.message === 'Participant added successfully') {
           socket.emit('join-project', projectId,userId);
         }
       }
 
       addParticipant();
     }
-  },[shareId]);
+  }
+},[projectId, shareId, projectOwner, session?.user?.email]);
 
   useEffect(()=>{
     socket.on('code-changed', (value) => {
       dispatch(setCurrentCode({fileId: value.fileId, code: value.value}));
+      dispatch(setFileUser({name: value.name ,fileId: value.fileId}));
     });
+
+    return () => {
+      socket.off('code-changed');
+    }
   }, []);
 
   const handleCodeChange = (value: string | undefined, event: editor.IModelContentChangedEvent) => {
     dispatch(setCurrentCode({fileId: currentFile, code: value}));
     dispatch(setFileUser({name: session?.user?.name ,fileId: currentFile}));
-    socket.emit('code-changed', {projectId,fileId: currentFile, value});
+    socket.emit('code-changed', {projectId,fileId: currentFile, value, name: session?.user?.name});
     if(fileSaved) {
       dispatch(setFileSaved(false));
     }
