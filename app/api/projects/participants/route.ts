@@ -32,6 +32,8 @@ export async function POST(req:Request, res: Response) {
     });
 
     await client.sAdd(`project:${projectId}`,userId);
+
+    console.log(await client.sMembers(`project:${projectId}`));
     return NextResponse.json({message: "Participant added successfully"}, { status: 200 });
     }
     catch(err){

@@ -64,7 +64,12 @@ const Participants = () => {
             handleUserLeft(user_id);
         });
 
-    }, [socket, projectId, shareId]);
+        return () => {
+            socket.off('user-joined');
+            socket.off('user-left');
+        }
+
+    }, [projectId, shareId]);
 
     
   return (
