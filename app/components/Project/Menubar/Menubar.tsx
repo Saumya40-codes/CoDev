@@ -38,7 +38,7 @@ const Menubar = () => {
 
           const data = await res.json();
           const customId = `${window?.location.href}?shareId=${data.shareId}`
-          dispatch(setShareId(shareId));
+          dispatch(setShareId(data.shareId));
           dispatch(setShareIdLink(customId));
         }
         catch(err){
@@ -67,7 +67,7 @@ const Menubar = () => {
         <PopoverHeader>
           <span className={styles.text}>Collaborate with others!</span>
         </PopoverHeader>
-        { shareId && shareIdLink &&(
+        {shareIdLink &&(
         <PopoverBody display='flex' flexDirection='row' gap='15px'>
           <input type="text" value={shareIdLink} readOnly className={styles.inpt}/>
           {copied? <CheckIcon color='green.500' marginTop='7px' /> : <CopyIcon color='whiteAlpha.800' marginTop='7px' cursor='pointer' onClick={handlecopiedClick} />}
