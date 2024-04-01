@@ -8,12 +8,6 @@ const port = 5000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors(
-    {
-        origin: ['http://localhost:3000', 'https://co-dev-sigma.vercel.app/', 'https://vercel.com/saumya40codes-projects/co-dev/CkS4NmjgZS6WMtQBUztCexE8UihE', 'https://co-dev-saumya40codes-projects.vercel.app/', 'https://co-dev-git-master-saumya40codes-projects.vercel.app/'],
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
-    }
-));
 
 const server = http.createServer(app);
 
@@ -29,6 +23,8 @@ server.listen(port, () => {
 });
 
 io.on('connection', (socket) => {
+
+    console.log('User connected');
 
     socket.on('join-project', (projectId:string, userId: string) => {
         socket.join(projectId);
