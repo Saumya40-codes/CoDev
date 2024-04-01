@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAppSelector, useAppDispatch } from '@/app/lib/redux/hooks';
-import { setShareId } from '@/app/lib/redux/features/ProjectSlice';
+import { setShareId, setShareIdLink } from '@/app/lib/redux/features/ProjectSlice';
 import { AddIcon, CopyIcon, CheckIcon } from '@chakra-ui/icons';
 import {
     Popover,
@@ -21,15 +21,9 @@ const Menubar = () => {
 
     const shareId = useAppSelector(state => state.project.shareId);
     const projectId = useAppSelector(state => state.project.projectId);
+    const shareIdLink = useAppSelector(state => state.project.shareLink);
     const dispatch = useAppDispatch();
     const [copied,setCopied] = useState<boolean>(false);
-    const[customId, setCustomId] = useState<string>('' || window?.location.href);
-
-    useEffect(()=>{
-        if(shareId){
-          setCustomId(`${window?.location.href}?shareId=${shareId}`);
-        }
-    },[]);
 
     const shareProject = async (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
@@ -45,7 +39,7 @@ const Menubar = () => {
           const data = await res.json();
           const customId = `${window?.location.href}?shareId=${data.shareId}`
           dispatch(setShareId(shareId));
-          setCustomId(customId);
+          dispatch(setShareIdLink(customId));
         }
         catch(err){
           console.log(err);
@@ -73,9 +67,9 @@ const Menubar = () => {
         <PopoverHeader>
           <span className={styles.text}>Collaborate with others!</span>
         </PopoverHeader>
-        { shareId &&(
+        { shareId && shareIdLink &&(
         <PopoverBody display='flex' flexDirection='row' gap='15px'>
-          <input type="text" value={customId} readOnly className={styles.inpt}/>
+          <input type="text" value={shareIdLink} readOnly className={styles.inpt}/>
           {copied? <CheckIcon color='green.500' marginTop='7px' /> : <CopyIcon color='whiteAlpha.800' marginTop='7px' cursor='pointer' onClick={handlecopiedClick} />}
         </PopoverBody>
         )
