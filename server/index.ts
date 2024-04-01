@@ -1,6 +1,5 @@
 import express from 'express';
 import http from 'http';
-import cors from 'cors';
 import { Server } from 'socket.io';
 
 const app = express();
@@ -45,8 +44,4 @@ io.on('connection', (socket) => {
         const { projectId, userId } = socket.handshake.query as { projectId: string, userId: string };
         socket.broadcast.to(projectId).emit('user-left',userId);
     });
-});
-
-app.get('/', (req, res) => {
-    res.send('Server is running');
 });
