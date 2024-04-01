@@ -36,7 +36,7 @@ https://github.com/Saumya40-codes/CoDev/assets/115284013/2b9713e2-3914-41bf-b4bf
 https://github.com/Saumya40-codes/CoDev/assets/115284013/43cfbfca-b935-4e4f-ba64-1e17059c742c
 
 
-
+**deployed api on render just doesnt seem to be working for web sockets :(**
 
 ## Features
 
