@@ -12,6 +12,7 @@ import { editor } from 'monaco-editor';
 import socket from '@/app/lib/socket/socket';
 import { useCookies } from 'next-client-cookies';
 import { useSession } from 'next-auth/react';
+import { setShareId } from '@/app/lib/redux/features/ProjectSlice';
 
 const EditorMain = () => {    
   const currentFile = useAppSelector((state) => state?.file.currentFile);
@@ -80,6 +81,7 @@ const EditorMain = () => {
 
     if(session?.user?.email === projectOwner){
       socket.emit('join-project', projectId,userId);
+      dispatch(setShareId(shareId));
       return;
     }
 
@@ -108,6 +110,7 @@ const EditorMain = () => {
         
         if(data.message === 'Participant added successfully') {
           socket.emit('join-project', projectId,userId);
+          dispatch(setShareId(shareId));
         }
       }
 

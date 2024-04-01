@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAppSelector, useAppDispatch } from '@/app/lib/redux/hooks';
 import { setShareId } from '@/app/lib/redux/features/ProjectSlice';
 import { AddIcon, CopyIcon, CheckIcon } from '@chakra-ui/icons';
@@ -23,6 +23,13 @@ const Menubar = () => {
     const projectId = useAppSelector(state => state.project.projectId);
     const dispatch = useAppDispatch();
     const [copied,setCopied] = useState<boolean>(false);
+    const[customId, setCustomId] = useState<string>('' || window?.location.href);
+
+    useEffect(()=>{
+        if(shareId){
+          setCustomId(`${window?.location.href}?shareId=${shareId}`);
+        }
+    },[]);
 
     const shareProject = async (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
@@ -37,7 +44,8 @@ const Menubar = () => {
 
           const data = await res.json();
           const customId = `${window?.location.href}?shareId=${data.shareId}`
-          dispatch(setShareId(customId));
+          dispatch(setShareId(shareId));
+          setCustomId(customId);
         }
         catch(err){
           console.log(err);
@@ -67,7 +75,7 @@ const Menubar = () => {
         </PopoverHeader>
         { shareId &&(
         <PopoverBody display='flex' flexDirection='row' gap='15px'>
-          <input type="text" value={shareId} readOnly className={styles.inpt}/>
+          <input type="text" value={customId} readOnly className={styles.inpt}/>
           {copied? <CheckIcon color='green.500' marginTop='7px' /> : <CopyIcon color='whiteAlpha.800' marginTop='7px' cursor='pointer' onClick={handlecopiedClick} />}
         </PopoverBody>
         )
