@@ -17,15 +17,15 @@ app.use(cors(
 
 const server = http.createServer(app);
 
-server.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
-
 const io = new Server(server, {
     cors: {
         origin: ['http://localhost:3000', 'https://co-dev-sigma.vercel.app/', 'https://vercel.com/saumya40codes-projects/co-dev/CkS4NmjgZS6WMtQBUztCexE8UihE', 'https://co-dev-saumya40codes-projects.vercel.app/', 'https://co-dev-git-master-saumya40codes-projects.vercel.app/'],
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     }
+});
+
+server.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
 
 io.on('connection', (socket) => {
