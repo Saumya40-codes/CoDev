@@ -3,10 +3,6 @@ import http from 'http';
 import { Server } from 'socket.io';
 
 const app = express();
-const port = 5000;
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 const server = http.createServer(app);
 
@@ -17,8 +13,8 @@ const io = new Server(server, {
     }
 });
 
-server.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+server.listen(5000, () => {
+    console.log(`Server is running on port 5000`);
 });
 
 io.on('connection', (socket) => {
