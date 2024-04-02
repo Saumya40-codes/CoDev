@@ -25,6 +25,10 @@ io.on('connection', (socket) => {
         socket.join(projectId);
         socket.handshake.query = { projectId, userId};
         io.in(projectId).emit('user-joined');
+    })
+
+    socket.on('project-state', (data) => {
+        io.in(data.projectId).emit('project-state', data);
     });
 
     socket.on('new-file', (projectId: string) => {

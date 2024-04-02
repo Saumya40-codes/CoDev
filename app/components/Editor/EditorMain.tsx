@@ -137,13 +137,13 @@ const EditorMain = () => {
     dispatch(setFileUser({name: session?.user?.name ,fileId: currentFile}));
     socket.emit('code-changed', {projectId,fileId: currentFile, value, name: session?.user?.name});
     if(fileSaved) {
-      dispatch(setFileSaved(false));
+      dispatch(setFileSaved({fileId: currentFile, saved: false}));
     }
   }
 
   const handleCtrlQ = async(event: React.KeyboardEvent) => {
     if(event.ctrlKey && event.key === 'q') {
-      dispatch(setFileSaved(true));
+      dispatch(setFileSaved({fileId: currentFile, saved: true}));
 
       if(!currentFile) {
         return;

@@ -119,7 +119,7 @@ const Folder = ({id}:{id:string}) => {
         dispatch(setCurrentLanguage(data.language));
         dispatch(setCurrentCode({fileId, code: data.code.code}));
         dispatch(setCurrentFile(fileId));
-        dispatch(setFileSaved(true));
+        dispatch(setFileSaved({fileId, saved: true}));
       }
     }
     catch(err){
