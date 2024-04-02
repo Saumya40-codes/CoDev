@@ -23,6 +23,7 @@ io.on('connection', (socket) => {
 
     socket.on('join-project', (projectId:string, userId: string) => {
         socket.join(projectId);
+        console.log("user joined ", projectId,userId);
         socket.handshake.query = { projectId, userId};
         io.in(projectId).emit('user-joined');
     })
