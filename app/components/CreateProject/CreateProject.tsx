@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import socket from '@/app/lib/socket/socket';
 import { useAppDispatch } from '@/app/lib/redux/hooks';
-import { setShareId } from '@/app/lib/redux/features/ProjectSlice';
+import { setShareId, setShareIdLink } from '@/app/lib/redux/features/ProjectSlice';
 import { setCurrentFile } from '@/app/lib/redux/features/FileSlice';
 
 const CreateProject = ({setCreateProject}:{setCreateProject:React.Dispatch<React.SetStateAction<boolean>>}) => {
@@ -48,6 +48,7 @@ const CreateProject = ({setCreateProject}:{setCreateProject:React.Dispatch<React
             const data = await res.json();
             dispatch(setShareId(null));
             dispatch(setCurrentFile(null))
+            dispatch(setShareIdLink(null));
             const newProjUrl = `/project/${data.id}`;
             router.push(newProjUrl);
         }
