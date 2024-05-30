@@ -30,7 +30,7 @@ const Profile = ({ session }: { session: Session }) => {
   }
 
   return (
-    <div>
+    <div className={styles.avatarContain}>
       <Popover>
         <PopoverTrigger>
           <img src={session?.user?.image ?? ''} alt="Profile" className={styles.avatar}/>

@@ -100,17 +100,18 @@ const Participants = () => {
 
     
   return (
-    <div>
-      {shareId && (
-        <AvatarGroup size='md' max={2}>
-        {participants?.map((val) => (
-            <Tooltip label={val.user.name} >
-            <Avatar key={val.user.id} name={val.user.name} src={val.user.image} />
-            </Tooltip>
-        ))}
-        </AvatarGroup>
-      )}
-    </div>
+    shareId ? (
+        <div>
+            <AvatarGroup size='md' max={2}>
+                {participants?.map((val) => (
+                    <Tooltip label={val.user.name} >
+                    <Avatar key={val.user.id} name={val.user.name} src={val.user.image} />
+                    </Tooltip>
+                ))}
+            </AvatarGroup>
+        </div>
+    ):
+    null
   )
 }
 

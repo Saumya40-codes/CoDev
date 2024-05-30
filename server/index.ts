@@ -1,6 +1,7 @@
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
+import { execCode } from './controllers/codeRunner';
 
 const app = express();
 
@@ -13,9 +14,6 @@ const io = new Server(server, {
     }
 });
 
-server.listen(5000, '0.0.0.0', () => {
-    console.log(`Server is running on port 5000`);
-});
 
 io.on('connection', (socket) => {
 
@@ -45,4 +43,14 @@ io.on('connection', (socket) => {
         const { projectId, userId } = socket.handshake.query as { projectId: string, userId: string };
         socket.broadcast.to(projectId).emit('user-left',userId);
     });
+});
+
+app.post('/execute', async (req, res) => {
+    const { code, lang } = req.body;
+    const result = await execCode(code, lang);
+    res.send(result);
+});
+
+server.listen(5000, '0.0.0.0', () => {
+    console.log(`Server is running on port 5000`);
 });

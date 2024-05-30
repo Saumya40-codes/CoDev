@@ -8,6 +8,7 @@ import Menubar from '../Menubar/Menubar'
 import Participants from '../../participants/Participants'
 import { getServerSession } from "next-auth";
 import { authConfig } from '@/app/lib/auth/auth';
+import Coderunner from '../CodeRunner/Coderunner'
 
 const Navbar = async() => {
 
@@ -27,6 +28,7 @@ const Navbar = async() => {
         </span>
       </div>
       <div className={styles.btns}>
+        <Coderunner/>
         <Menubar/>
         <Participants/>
         {
