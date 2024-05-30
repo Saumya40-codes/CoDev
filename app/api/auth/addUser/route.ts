@@ -8,8 +8,6 @@ export const POST = async (req: Request) => {
     try{
         const {name, email, image} = await req.json();
 
-        console.log(name, email, image)
-
         if(!name || !email){
             return NextResponse.json(new ApiResponse({status: 400, message: 'Please provide all the required fields'}))
         }

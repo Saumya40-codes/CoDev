@@ -38,8 +38,8 @@ const Coderunner = () => {
 
       const data = await res.json();
 
-      const output = String(data.output).split('\n').join(' ');
-      
+      const output = String(data.output)
+
       dispatch(setOutput({fileId: currentFile, output}));
     }
     catch(e){

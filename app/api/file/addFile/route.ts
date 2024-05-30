@@ -5,8 +5,6 @@ export const POST = async (req: Request, res: Response) => {
     try {
         const {name, language, projectId, code} = await req.json();
 
-        console.log(name, language, projectId, code);
-
         const file = await prisma.files.create({
             data: {
                 name,
@@ -18,8 +16,6 @@ export const POST = async (req: Request, res: Response) => {
                 }
             }
         });
-
-        console.log(file);
 
         const fileId = file.id;
 
@@ -33,8 +29,6 @@ export const POST = async (req: Request, res: Response) => {
                 }
             }
         });
-
-        console.log(codeF);
 
         return NextResponse.json({fileId}, {status: 200});
     } catch (error) {

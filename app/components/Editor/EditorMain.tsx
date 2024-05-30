@@ -161,7 +161,7 @@ const EditorMain = () => {
   }
 
   return (
-    <div style={{width:"100vw", resize:'both', overflow:'auto'}} onKeyDown={handleCtrlQ}>
+    <div style={{width:"100%", resize:'both', overflow:'auto'}} onKeyDown={handleCtrlQ}>
       {shareId && (<div className={styles.shareIdBlock}>
         {currentFile && fileUserId[currentFile] && (
           <span>
