@@ -46,6 +46,7 @@ const CreateProject = ({setCreateProject}:{setCreateProject:React.Dispatch<React
 
             
             const data = await res.json();
+
             dispatch(setShareId(null));
             dispatch(setCurrentFile(null))
             dispatch(setShareIdLink(null));
