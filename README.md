@@ -1,6 +1,6 @@
 # codev - Collaborative Code Editor
 
-codev is a rich code editor designed for developers to collaborate seamlessly on projects, create different files and codes, and invite other developers to join their projects. With real-time updates, users can see who has joined or left the project, as well as who is currently editing the code.
+codev is a rich code editor designed for developers to collaborate seamlessly on projects, create different files and codes, and invite other developers to join their projects. With real-time updates, users can see who has joined or left the project, as well as who is currently editing the code and execution of the code written.
 
 ## Demo
 
@@ -35,6 +35,13 @@ https://github.com/Saumya40-codes/CoDev/assets/115284013/2b9713e2-3914-41bf-b4bf
 
 https://github.com/Saumya40-codes/CoDev/assets/115284013/43cfbfca-b935-4e4f-ba64-1e17059c742c
 
+5. Execute the Code (Currently Javascript and Python)
+
+
+
+
+https://github.com/Saumya40-codes/CoDev/assets/115284013/ec6abdf3-e77f-40ec-9adb-2e0c28bfa9af
+
 
 **deployed api on render just doesnt seem to be working for web sockets :(**
 
@@ -44,6 +51,7 @@ https://github.com/Saumya40-codes/CoDev/assets/115284013/43cfbfca-b935-4e4f-ba64
 - Project management: Create and manage projects with ease, including the ability to create files and folders within projects.
 - User invitations: Invite other developers to join your projects and collaborate effortlessly.
 - Activity tracking: See real-time updates on who has joined or left the project and who is currently editing.
+- Code execution: Execute your code and get related errors/output
 
 ## Tech Stack
 
@@ -54,6 +62,7 @@ https://github.com/Saumya40-codes/CoDev/assets/115284013/43cfbfca-b935-4e4f-ba64
 - **Socket.io**: Facilitates real-time communication between clients and server for collaborative editing.
 - **My SQl**: As a primary *relational* database
 - **Prisma**: Serves as the ORM (Object-Relational Mapping) tool for MySQL database, simplifying database interactions and migrations.
+- **Docker**: To create and publish Docker images for efficient and isolated code execution environments
 
 ## Installation
 
@@ -79,6 +88,7 @@ REDIS_HOST=
 REDIS_PORT=
 REDIS_PASSWORD=
 HOST_ENV=dev
+ENDPOINT=http://localhost:5000
 ```
 
 4. Run prisma migrations
@@ -93,6 +103,7 @@ npx prisma migrate dev --name init --create-only
 ```bash
 npx prisma migrate deploy
 ```
-
-### In progress
-Code **compiling** will soon be available!
+If you want to publish/checkout any docker image 
+```
+cd server/controllers
+```
