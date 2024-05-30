@@ -1,4 +1,7 @@
-FROM golang:1.16
+FROM ubuntu
+
+RUN apt-get update
+RUN apt-get install -y golang
 
 WORKDIR /usr/src/app
 

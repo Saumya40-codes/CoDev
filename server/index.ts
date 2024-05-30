@@ -1,9 +1,16 @@
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
-import { execCode } from './controllers/codeRunner';
+import fs from 'fs';
+import { exec } from 'child_process';
+import { v4 as uuidv4 } from 'uuid';
+import os from 'os';
+import { langs } from './controllers/codeConfig';
+import { ext } from './controllers/codeConfig';
 
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const server = http.createServer(app);
 
@@ -21,7 +28,6 @@ io.on('connection', (socket) => {
 
     socket.on('join-project', (projectId:string, userId: string) => {
         socket.join(projectId);
-        console.log("user joined ", projectId,userId);
         socket.handshake.query = { projectId, userId};
         io.in(projectId).emit('user-joined');
     })
@@ -46,9 +52,57 @@ io.on('connection', (socket) => {
 });
 
 app.post('/execute', async (req, res) => {
-    const { code, lang } = req.body;
-    const result = await execCode(code, lang);
-    res.send(result);
+    try{
+        const { code, lang } = req.body;
+
+        if(!(lang in langs)){
+            return 'Language not supported';
+        }
+
+        let id = uuidv4();
+        
+        fs.mkdirSync(`codes/${id}`);
+        fs.writeFileSync(`codes/${id}/script.${ext[lang as keyof typeof ext]}`, code);
+
+        const sys = os.platform();
+
+        let command = '';
+
+        if(lang === 'javascript'){
+            command = `node codes/${id}/script.js`; // as node is already installed in the local for application to run
+        }
+        else if(sys === 'win32'){
+            command = `docker run --rm -v %cd%/codes/${id}:/usr/src/app ${langs[lang as keyof typeof langs]}`;
+        }
+        else{
+            command = `docker run --rm -v $(pwd)/codes/${id}:/usr/src/app ${langs[lang as keyof typeof langs]}`;
+        }
+
+        exec(command, (error, stdout, stderr) => {
+
+            fs.rm(`codes/${id}`, { recursive: true }, (err) => {
+                if (err) {
+                    console.error(err);
+                }
+            });
+
+            if (error) {
+                console.log(`error: ${error.message}`);
+
+                return res.status(500).json({ output: error.message });
+            }
+            if (stderr) {
+                console.log(`stderr: ${stderr}`);
+                return res.status(500).json({ output: stderr });
+            }
+            
+            return res.status(200).json({ output: stdout });
+        });
+    }
+    catch(err){
+        console.log(err);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 server.listen(5000, '0.0.0.0', () => {
