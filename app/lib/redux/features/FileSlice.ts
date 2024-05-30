@@ -9,13 +9,17 @@ interface FileProps{
     fileSaved: {
         [key: string]: boolean
     };
+    output: {
+        [key: string]: string
+    };
 }
 
 const initialState: FileProps = {
     currentFile: null,
     currentCode: {},
     currentLanguage: '',
-    fileSaved: {}
+    fileSaved: {},
+    output: {}
 }
 
 export const fileSlice = createSlice({
@@ -35,9 +39,13 @@ export const fileSlice = createSlice({
         setFileSaved: (state, action) => {
             const { fileId, saved } = action.payload;
             state.fileSaved[fileId] = saved;
+        },
+        setOutput: (state, action) => {
+            const { fileId, output } = action.payload;
+            state.output[fileId] = output;
         }
     }
 });
 
-export const { setCurrentFile, setCurrentCode, setCurrentLanguage, setFileSaved } = fileSlice.actions;
+export const { setCurrentFile, setCurrentCode, setCurrentLanguage, setFileSaved, setOutput } = fileSlice.actions;
 export default fileSlice.reducer;

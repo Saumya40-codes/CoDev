@@ -20,3 +20,12 @@
     overflow: hidden;
     gap: 10px;
 }
+
+.workspace{
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 1;
+    flex-grow: 1;
+    overflow: hidden;
+    gap: 5px;
+}

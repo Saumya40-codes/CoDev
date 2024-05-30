@@ -1,0 +1,20 @@
+.terminal{
+    background-color: #000;
+    color: #fff;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    border: 1px solid #fff;
+    border-top: 3px solid #fff;
+    overflow:auto;
+    resize: both;
+    height: 200px;
+    width: 100vw;
+    bottom: 0;
+    position: fixed;
+    z-index: 1000;
+    margin-left: -10px;
+}
+
+.welc{
+    text-align: center;
+}

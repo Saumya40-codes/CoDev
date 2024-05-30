@@ -103,7 +103,7 @@ const Participants = () => {
     shareId ? (
         <div>
             <AvatarGroup size='md' max={2}>
-                {participants?.map((val) => (
+                {Array.isArray(participants) && participants?.map((val) => (
                     <Tooltip label={val.user.name} >
                     <Avatar key={val.user.id} name={val.user.name} src={val.user.image} />
                     </Tooltip>

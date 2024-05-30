@@ -2,9 +2,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 75px;
     flex-direction: column;
     gap: 40px;
+    width: 100%;
+    height: 100%;
 }
 
 @keyframes fadeIn {
