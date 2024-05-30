@@ -21,7 +21,12 @@ export const POST = async(req:Request, res: Response) => {
             }
         });
 
-        await client.sAdd(`project:${newProject.id}`,userId);
+        try{
+            await client.sAdd(`project:${newProject.id}`,userId);
+        }
+        catch(error){
+            console.log(error);
+        }
 
         return NextResponse.json({id: newProject.id}, {status: 201});
     }

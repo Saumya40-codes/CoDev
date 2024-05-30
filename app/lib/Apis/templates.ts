@@ -36,5 +36,7 @@ export const templates = {
         public static void main(String[] args) {
             System.out.println("Hello, world!");
         }
-    }`
+    }`,
+    python: `# Add your Python code here
+    print('Hello, world!')`,
 }

@@ -72,7 +72,7 @@ const NewFile = ({setNewFile}:NewFileProps) => {
             name: fileName,
             language: fileType,
             projectId,
-            code: templates[fileType as keyof typeof templates]
+            code: templates[fileType as keyof typeof templates] || ''
           })
         });
   
@@ -80,7 +80,7 @@ const NewFile = ({setNewFile}:NewFileProps) => {
   
         if(res.status === 200){
           dispatch(setCurrentFile(data.fileId));
-          dispatch(setCurrentCode({fileId: data.fileId, code: templates[fileType as keyof typeof templates]}));
+          dispatch(setCurrentCode({fileId: data.fileId, code: templates[fileType as keyof typeof templates] || ''}));
           dispatch(setCurrentLanguage(fileType));
 
           setNewFile(false);
