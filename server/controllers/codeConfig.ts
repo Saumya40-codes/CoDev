@@ -1,5 +1,5 @@
 export const langs = {
-    'python': 'python-env',
+    'python': 'saumyashah40/compile-langs:python-env',
     'javascript': 'js-env',
     'java': 'java-env',
     'cpp': 'cpp-env',
