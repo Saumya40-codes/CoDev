@@ -7,10 +7,15 @@ import { v4 as uuidv4 } from 'uuid';
 import os from 'os';
 import { langs } from './controllers/codeConfig';
 import { ext } from './controllers/codeConfig';
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors({
+    origin: ['http://localhost:3000'],
+    credentials: true
+}));
 
 const server = http.createServer(app);
 
@@ -87,13 +92,10 @@ app.post('/execute', async (req, res) => {
             });
 
             if (error) {
-                console.log(`error: ${error.message}`);
-
-                return res.status(500).json({ output: error.message });
+                return res.status(200).json({ output: error.message });
             }
             if (stderr) {
-                console.log(`stderr: ${stderr}`);
-                return res.status(500).json({ output: stderr });
+                return res.status(200).json({ output: stderr });
             }
             
             return res.status(200).json({ output: stdout });
