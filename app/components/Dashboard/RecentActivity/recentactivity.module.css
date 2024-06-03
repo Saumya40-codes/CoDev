@@ -4,6 +4,8 @@
     align-items: center;
     justify-content: center;
     color: #F0F0F0;
+    height: auto;
+    margin-bottom: 20px;
 }
 
 .project{
@@ -17,7 +19,6 @@
     padding: 8px;
     cursor: pointer;
     transition: 0.3s all ease-in-out;
-    height: 100%;
 }
 
 .project:hover{

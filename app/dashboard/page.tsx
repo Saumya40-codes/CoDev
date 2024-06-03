@@ -9,7 +9,7 @@ const Dashboard = async () => {
     <div className={styles.mains}>
         <Navbar />
         <DashboardContents />
-        <RecentActivity />
+        {/* <RecentActivity /> */}
     </div>
   )
 }
