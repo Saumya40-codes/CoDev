@@ -6,11 +6,10 @@ import Auth from '../../Auth/Auth'
 import Profile from '../Profile/Profile'
 import { getServerSession } from "next-auth";
 import { authConfig } from '@/app/lib/auth/auth';
-import { Session } from '@/app/lib/types/types';
 
 const Navbar = async() => {
 
-    const session = await getServerSession(authConfig) as Session | null;
+    const session = await getServerSession(authConfig);
 
   return (
     <div className={styles.mainNav}>

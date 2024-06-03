@@ -12,7 +12,7 @@ import {
   PopoverArrow,
   PopoverCloseButton,
 } from '@chakra-ui/react'
-import { Session } from '@/app/lib/types/types';
+import { Session } from 'next-auth'
 import { signOut } from 'next-auth/react';
 
 const Profile = ({ session }: { session: Session }) => {
