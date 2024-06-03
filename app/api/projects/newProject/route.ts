@@ -6,6 +6,8 @@ import { client } from "@/app/lib/redis/db";
 export const POST = async(req:Request, res: Response) => {
     const {name, userId} = await req.json();
 
+    console.log(name, userId);
+
     const newProject = await prisma.projects.create({
         data: {
             name,
@@ -27,5 +29,8 @@ export const POST = async(req:Request, res: Response) => {
         // redis instance might have got closed due to inactivity in which case we need to reinitialize it
     }
 
-    return NextResponse.json({id: newProject.id}, {status: 201});
+    return NextResponse.json({
+        message: "Project created successfully",
+        project: newProject
+    });
 }
