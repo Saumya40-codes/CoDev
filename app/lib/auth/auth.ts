@@ -1,6 +1,8 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { prisma } from "@/prisma/prisma";
+import {Session} from "../types/types"
+
 
 export const authConfig: NextAuthOptions = {
     providers: [
@@ -46,17 +48,27 @@ export const authConfig: NextAuthOptions = {
             
             return token;
         }, 
-        async session({ session, token }) {
+        async session({ session, token, user }) {
             console.log('session callback called');
             console.log('session:', session);
             console.log('token:', token);
-            return {
-                ...session,
-                user: {
-                    ...session.user,
-                    id: token.id, 
-                },
+
+            let newSession = session as Session;
+
+            if (session.user) {
+                newSession = {
+                    ...session,
+                    user: {
+                        ...session.user,
+                        id: token.id as string,
+                    },
+                };
             }
+            else console.log('session.user is null');
+
+            console.log('newSession:', newSession);
+
+            return  newSession;
         }
     }
 }
