@@ -20,8 +20,13 @@ interface DataProps {
 const RecentActivity = () => {
     const [mainData, setMainData] = useState<DataProps>();
     const { data: session } = useSession() as { data: Session | undefined };
-    const userId = session?.user?.id;
+    let userId = session?.user?.id;
     const router = useRouter();
+
+    useEffect(()=>{
+        userId = session?.user?.id;
+        console.log(session?.user)
+    }, [session?.user?.id])
 
     useEffect(() => {
         const getProjects = async () => {
