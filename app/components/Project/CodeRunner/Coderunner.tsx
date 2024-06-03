@@ -27,7 +27,7 @@ const Coderunner = () => {
 
       const endpoint = process.env.ENDPOINT ? process.env.ENDPOINT:  "https://codev-api.onrender.com";
 
-      const res = await fetch(endpoint, {
+      const res = await fetch(`${endpoint}/execute`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
