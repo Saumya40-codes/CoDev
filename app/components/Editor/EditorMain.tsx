@@ -10,7 +10,7 @@ import { setCurrentCode, setFileSaved } from '@/app/lib/redux/features/FileSlice
 import { setFileUser } from '@/app/lib/redux/features/EditingSlice';
 import { editor } from 'monaco-editor';
 import socket from '@/app/lib/socket/socket';
-import { useCookies } from 'next-client-cookies';
+import { Session } from '@/app/lib/types/types';
 import { useSession } from 'next-auth/react';
 import { setShareId, setShareIdLink } from '@/app/lib/redux/features/ProjectSlice';
 
@@ -24,8 +24,8 @@ const EditorMain = () => {
   const projectOwner = useAppSelector((state) => state.project.projectAdmin);
   const fileUserId = useAppSelector((state) => state.editing.fileUserMap);
   const dispatch = useAppDispatch();
-  const cookies = useCookies();
-  const {data: session} = useSession();
+  const {data: session} = useSession() as {data: Session | undefined};
+  const userId = session?.user?.id;
 
   const handleEditorDidMount = (editor: any, monaco: any) => {
     
@@ -62,22 +62,6 @@ const EditorMain = () => {
 
   useEffect(()=>{
     if(shareId && projectId){
-      const userId = cookies.get('userId');
-
-    if(!userId){
-        const getUserId = async() => {
-        const res = await fetch(`api/auth/${session?.user?.email}/getUser`);
-
-        if(res.status === 404) {
-          return;
-        }
-
-        const data = await res.json();
-        cookies.set('userId', data.id);
-      }
-      
-      getUserId(); 
-    }
 
     if(session?.user?.email === projectOwner){
       socket.emit('join-project', projectId,userId);

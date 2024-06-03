@@ -2,11 +2,9 @@
 
 import React,{useEffect, useState} from 'react'
 import styles from './recentactivity.module.css'
-import { useCookies } from 'next-client-cookies';
 import { useSession } from 'next-auth/react';
-import { ChevronRightIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/navigation';
-
+import { Session } from '@/app/lib/types/types';
 
 interface DataProps{
     projects: [
@@ -22,27 +20,11 @@ interface DataProps{
 const RecentActivity = () => {
 
     const[mainData, setMainData] = useState<DataProps>();
-    const cookies = useCookies();
-    const userId = cookies.get('userId');
-    const {data: session} = useSession();
+    const {data: session} = useSession() as {data: Session | undefined};
+    const userId = session?.user?.id; 
     const router = useRouter();
 
-    useEffect(()=>{
-        if(!userId){
-            const getUserId = async() => {
-            const res = await fetch(`api/auth/${session?.user?.email}/getUser`);
-    
-            if(res.status === 404) {
-              return;
-            }
-    
-            const data = await res.json();
-            cookies.set('userId', data.id);
-          }
-          
-          getUserId(); 
-        }
-        
+    useEffect(()=>{        
         const getProjects = async() => {
             try{
                 const res = await fetch(`/api/user/${userId}/projects`,{
@@ -89,6 +71,9 @@ const RecentActivity = () => {
                     </div>
                 </div>
             ))}
+            {!mainData?.projects && <span>
+                No Recent Activity Found...
+            </span>}
     </div>
     </div>
     )}

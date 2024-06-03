@@ -1,6 +1,5 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { cookies } from "next/headers";
 import { prisma } from "@/prisma/prisma";
 
 export const authConfig: NextAuthOptions = {
@@ -10,7 +9,7 @@ export const authConfig: NextAuthOptions = {
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
         }),
     ],
-    callbacks:{  
+    callbacks: {  
         async signIn({ user }) {
             if(user){
                 const Existinguser = await prisma.user.findFirst({
@@ -19,9 +18,7 @@ export const authConfig: NextAuthOptions = {
                     }
                 });
                 if(Existinguser){
-                    if(cookies().get('userId') === undefined){
-                        cookies().set('userId', Existinguser.id);
-                    }
+                    user.id = Existinguser.id; // Add id to user object
                     return true;
                 }
                 else{
@@ -32,16 +29,27 @@ export const authConfig: NextAuthOptions = {
                             image: user.image as string,
                         }
                     });
-
-                    if(cookies().get('userId') === undefined){
-                        cookies().set('userId', newUser.id);
-                    }
-
+                    user.id = newUser.id; // Add id to user object
                     return true;
                 }
             }
             else{
                 return false;
+            }
+        },
+        async jwt({ token, account, profile, user }) {
+            if(user && user?.id){
+                token.id = user.id;
+            }
+            return token;
+        }, 
+        async session({ session, token }) {
+            return {
+                ...session,
+                user: {
+                    ...session.user,
+                    id: token.id, 
+                },
             }
         }
     }

@@ -1,32 +1,17 @@
-'use client'
-
 import React, { useEffect, useState } from 'react'
 import styles from './createproject.module.css'
 import { CloseIcon } from '@chakra-ui/icons'
-import { useCookies } from 'next-client-cookies';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import socket from '@/app/lib/socket/socket';
 import { useAppDispatch } from '@/app/lib/redux/hooks';
 import { setShareId, setShareIdLink } from '@/app/lib/redux/features/ProjectSlice';
 import { setCurrentFile } from '@/app/lib/redux/features/FileSlice';
+import { Session } from '@/app/lib/types/types'
 
 const CreateProject = ({setCreateProject}:{setCreateProject:React.Dispatch<React.SetStateAction<boolean>>}) => {
-    const cookies = useCookies();
-    const userId = cookies.get('userId');
     const dispatch = useAppDispatch();
-    const {data: session} = useSession();
-
-    useEffect(()=>{
-        if(userId === undefined && session?.user?.email !== undefined){
-            const getUserId = async() => {
-                const res = await fetch(`api/auth/${session?.user?.email}/getUser`);
-                const data = await res.json();
-                cookies.set('userId', data.id);
-            }
-            getUserId(); 
-        }
-    },[userId])
+    const {data: session} = useSession() as {data: Session | undefined};
+    const userId = session?.user?.id; 
     const router = useRouter();
 
     const [projectName, setProjectName] = useState<string>('');
