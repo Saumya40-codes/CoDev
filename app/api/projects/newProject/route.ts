@@ -24,7 +24,7 @@ export const POST = async(req:Request, res: Response) => {
         await client.sAdd(`project:${newProject.id}`,userId);
     }
     catch(error){
-        console.log(error);
+        // redis instance might have got closed due to inactivity in which case we need to reinitialize it
     }
 
     return NextResponse.json({id: newProject.id}, {status: 201});
