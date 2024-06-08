@@ -39,16 +39,16 @@ export const authConfig: NextAuthOptions = {
                 return false;
             }
         },
-        async jwt({ token, account, profile, user }) {
+        async jwt({ token, user }) {
             if(user && user?.id){
                 token.id = user.id;
             }
 
             console.log("token", token);
             
-            return token;
+            return {...token, ...user};
         }, 
-        async session({ session, token, user }) {
+        async session({ session, token }) {
             console.log('session callback called');
             console.log('session:', session);
             console.log('token:', token);
