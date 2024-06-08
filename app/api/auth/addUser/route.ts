@@ -20,8 +20,6 @@ export const POST = async (req: Request) => {
             }
         })
 
-        console.log(user)
-
         return NextResponse.json(new ApiResponse({status: 201, message: 'User created successfully'}))
     }
     catch(e){

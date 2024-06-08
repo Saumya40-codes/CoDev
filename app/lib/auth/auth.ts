@@ -44,15 +44,9 @@ export const authConfig: NextAuthOptions = {
                 token.id = user.id;
             }
 
-            console.log("token", token);
-            
             return token;
         }, 
         async session({ session, token, user }) {
-            console.log('session callback called');
-            console.log('session:', session);
-            console.log('token:', token);
-
             let newSession = session as Session;
 
             if (session.user) {
@@ -65,8 +59,6 @@ export const authConfig: NextAuthOptions = {
                 };
             }
             else console.log('session.user is null');
-
-            console.log('newSession:', newSession);
 
             return  newSession;
         }

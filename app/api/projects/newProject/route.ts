@@ -6,8 +6,6 @@ import { client } from "@/app/lib/redis/db";
 export const POST = async(req:Request, res: Response) => {
     const {name, userId} = await req.json();
 
-    console.log(name, userId);
-
     const newProject = await prisma.projects.create({
         data: {
             name,
