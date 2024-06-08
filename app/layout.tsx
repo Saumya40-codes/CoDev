@@ -1,22 +1,20 @@
-import type { Metadata } from "next";
+import type { AppProps } from 'next/app';
 import { Providers } from './providers'
 import { Session } from "./lib/types/types";
 import "./globals.css";
 
-export default function RootLayout({
-  children,
-  session,
-}: Readonly<{
-  children: React.ReactNode;
-  session: Session | null;
-}>) {
+function RootLayout({ Component, pageProps }: AppProps) {
+  const { session } = pageProps;
+
   return (
     <html lang="en">
       <body>
         <Providers session={session}>
-          {children}
+          <Component {...pageProps} />
         </Providers>
       </body>
     </html>
   );
 }
+
+export default RootLayout;
