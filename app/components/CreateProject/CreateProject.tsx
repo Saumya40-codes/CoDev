@@ -35,7 +35,7 @@ const CreateProject = ({setCreateProject}:{setCreateProject:React.Dispatch<React
             dispatch(setShareId(null));
             dispatch(setCurrentFile(null))
             dispatch(setShareIdLink(null));
-            const newProjUrl = `/project/${data.id}`;
+            const newProjUrl = `/project/${data.project.id}`;
             router.push(newProjUrl);
         }
         catch(err){
