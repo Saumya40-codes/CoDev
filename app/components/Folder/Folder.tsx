@@ -80,7 +80,7 @@ const Folder = ({id}:{id:string}) => {
 
   useEffect(()=>{
     if(id){
-      dispatch(setProjectId({projectId: id, user:session?.user?.email}));
+      dispatch(setProjectId({projectId: id}));
     }
   }, [id]); 
 

@@ -12,7 +12,6 @@ import { editor } from 'monaco-editor';
 import socket from '@/app/lib/socket/socket';
 import { Session } from '@/app/lib/types/types';
 import { useSession } from 'next-auth/react';
-import { setShareId, setShareIdLink } from '@/app/lib/redux/features/ProjectSlice';
 
 const EditorMain = () => {    
   const currentFile = useAppSelector((state) => state?.file.currentFile);
@@ -21,11 +20,9 @@ const EditorMain = () => {
   const fileSaved = useAppSelector((state) => state?.file.fileSaved);
   const shareId = useAppSelector((state) => state?.project.shareId);
   const projectId = useAppSelector((state) => state?.project.projectId);
-  const projectOwner = useAppSelector((state) => state.project.projectAdmin);
   const fileUserId = useAppSelector((state) => state.editing.fileUserMap);
   const dispatch = useAppDispatch();
   const {data: session} = useSession() as {data: Session | undefined};
-  const userId = session?.user?.id;
 
   const handleEditorDidMount = (editor: any, monaco: any) => {
     
@@ -59,51 +56,6 @@ const EditorMain = () => {
     monaco.editor.setTheme('my-theme');
     editor.focus();
   }
-
-  useEffect(()=>{
-    if(shareId && projectId){
-
-    if(session?.user?.email === projectOwner){
-      socket.emit('join-project', projectId,userId);
-      dispatch(setShareId(shareId));
-      dispatch(setShareIdLink(`${window.location.href}?shareId=${shareId}`));
-      return;
-    }
-
-    const path = window.location.href;
-    const url = new URL(path);
-    const urlShareId = url.searchParams.get('shareId');
-
-    if(!urlShareId) {
-      return;
-    }
-
-    if(urlShareId === shareId) {
-      if(!userId) {
-        return;
-      }
-
-      const addParticipant = async () => {
-        const res = await fetch('/api/projects/participants', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({projectId, userId})
-        });
-        const data = await res.json();
-        
-        if(data.message === 'Participant added successfully') {
-          socket.emit('join-project', projectId,userId);
-          dispatch(setShareId(shareId));
-          dispatch(setShareIdLink(`${window.location.href}?shareId=${shareId}`));
-        }
-      }
-
-      addParticipant();
-    }
-  }
-},[projectId, shareId, projectOwner, session?.user?.email]);
 
   useEffect(()=>{
     socket.on('code-changed', (value) => {

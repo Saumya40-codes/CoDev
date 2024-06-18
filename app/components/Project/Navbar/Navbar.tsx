@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import logo from '../../../../styles/images/logo.png'
 import styles from './navbar.module.css'
@@ -6,13 +8,12 @@ import Auth from '../../Auth/Auth'
 import Profile from '../../MainPage/Profile/Profile'
 import Menubar from '../Menubar/Menubar'
 import Participants from '../../participants/Participants'
-import { getServerSession } from "next-auth";
-import { authConfig } from '@/app/lib/auth/auth';
 import Coderunner from '../CodeRunner/Coderunner'
+import { useSession } from 'next-auth/react'
 
-const Navbar = async() => {
+const Navbar = () => {
 
-  const session = await getServerSession(authConfig);  
+  const {data:session} = useSession(); 
 
   return (
     <div className={styles.mainNav}>

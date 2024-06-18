@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/prisma";
-import { client } from "@/app/lib/redis/db";
+import client from "@/app/lib/redis/db";
 
 export async function POST(req:Request, res: Response) {
   try{
-    const { projectId, userId } = await req.json();
+    const { projectId, userId } = await req.json();    
     const project = await prisma.projects.findUnique({
         where: { id: projectId },
     });
@@ -20,7 +20,7 @@ export async function POST(req:Request, res: Response) {
     });
 
     if(participantExists){
-        await client.sAdd(`project:${projectId}`,userId);
+        await client.sadd(`project:${projectId}`,userId);
         return NextResponse.json({message: "Participant already exists"}, { status: 200 });
     }
     
@@ -31,7 +31,7 @@ export async function POST(req:Request, res: Response) {
         }
     });
 
-    await client.sAdd(`project:${projectId}`,userId);
+    await client.sadd(`project:${projectId}`,userId);
     return NextResponse.json({message: "Participant added successfully"}, { status: 200 });
     }
     catch(err){

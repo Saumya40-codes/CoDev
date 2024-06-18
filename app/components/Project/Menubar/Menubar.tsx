@@ -47,7 +47,9 @@ const Menubar = () => {
       }
 
       const handlecopiedClick = () =>{
-        navigator.clipboard.writeText(shareId || '');
+
+        const shareurl = `${window?.location.href}?shareId=${shareId}`;
+        navigator.clipboard.writeText(shareurl || '');
         setCopied((prevSetCopied)=>!prevSetCopied);
 
         setTimeout(()=>{

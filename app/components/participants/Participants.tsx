@@ -8,6 +8,7 @@ import { Tooltip } from '@chakra-ui/react';
 import { setFileUser } from '@/app/lib/redux/features/EditingSlice';
 import { setFileSaved } from '@/app/lib/redux/features/FileSlice';
 import { setProjectId } from '@/app/lib/redux/features/ProjectSlice';
+import { setShareId } from '@/app/lib/redux/features/ProjectSlice';
 
 interface ParticipantsProps {
     user : {
@@ -67,14 +68,14 @@ const Participants = () => {
     useEffect(() => {
         socket.on('user-joined', async () => {
             await getParticipants();
-            socket.emit('project-state', { projectId, fileUserMap, fileSaved});
+            socket.emit('project-state', { projectId, fileUserMap, fileSaved, shareId, projectAdmin});
         });
         socket.on('user-left', (user_id: string) => {
             handleUserLeft(user_id);
         });
 
         socket.on('project-state', async (data) => {
-            const {projectId, fileUserMap, fileSaved } = data;
+            const {projectId, fileUserMap, fileSaved, shareId, admin} = data;
             const keys = Object.keys(fileUserMap);
 
             keys.forEach((key) => {
@@ -87,15 +88,12 @@ const Participants = () => {
                 dispatch(setFileSaved({fileId: key, saved: fileSaved[key]}));
             });
 
-            dispatch(setProjectId({projectId, user: projectAdmin}));
+            dispatch(setProjectId({projectId, user: admin}));
+
+            if(shareId) {
+                dispatch(setShareId(shareId));
+            }
         });
-
-        return () => {
-            socket.off('user-joined');
-            socket.off('user-left');
-            socket.off('project-state');
-        }
-
     }, [projectId, shareId]);
 
     
@@ -104,8 +102,8 @@ const Participants = () => {
         <div>
             <AvatarGroup size='md' max={2}>
                 {Array.isArray(participants) && participants?.map((val) => (
-                    <Tooltip label={val.user.name} >
-                    <Avatar key={val.user.id} name={val.user.name} src={val.user.image} />
+                    <Tooltip label={val.user.name} key={val.user.id} >
+                    <Avatar name={val.user.name} src={val.user.image} />
                     </Tooltip>
                 ))}
             </AvatarGroup>

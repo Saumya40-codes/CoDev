@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/prisma";
-import { client } from "@/app/lib/redis/db";
+import client from "@/app/lib/redis/db";
 
 
 export const POST = async(req:Request, res: Response) => {
@@ -20,12 +20,7 @@ export const POST = async(req:Request, res: Response) => {
         }
     });
 
-    try{
-        await client.sAdd(`project:${newProject.id}`,userId);
-    }
-    catch(error){
-        // redis instance might have got closed due to inactivity in which case we need to reinitialize it
-    }
+    await client.sadd(`project:${newProject.id}`,userId);
 
     return NextResponse.json({
         message: "Project created successfully",

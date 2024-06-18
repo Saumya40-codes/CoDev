@@ -1,22 +1,8 @@
-import {createClient} from 'redis'
+import { Redis } from '@upstash/redis'
 
-const client = createClient({
-    password: process.env.REDIS_PASSWORD,
-    socket: {
-        host: process.env.REDIS_HOST,
-        port: parseInt(process.env.REDIS_PORT || '1234')
-    }
-});
+const client = new Redis({
+    url: process.env.REDIS_HOST,
+    token: process.env.REDIS_PASSWORD,
+})
 
-client.on('error', (error) => {
-    client.disconnect();
-});
-
-if(!client.isOpen){
-    client.connect();
-}
-else{
-    console.log('Redis client already connected');
-}
-
-export {client}
+export default client

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/prisma";
-import { client } from "@/app/lib/redis/db";
+import  client from "@/app/lib/redis/db";
 
 export const POST = async (req: Request, res: Response) => {
     try{
@@ -21,7 +21,7 @@ export const POST = async (req: Request, res: Response) => {
             }
         });
 
-        const availableUser = await client.sMembers(`project:${projectId}`);
+        const availableUser = await client.smembers(`project:${projectId}`);
 
         const filterParticipants = participants.filter((val) => availableUser.includes(val.user.id));
 
