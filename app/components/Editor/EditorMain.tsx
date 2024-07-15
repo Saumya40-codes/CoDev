@@ -25,31 +25,30 @@ const EditorMain = () => {
   const {data: session} = useSession() as {data: Session | undefined};
 
   const handleEditorDidMount = (editor: any, monaco: any) => {
-    
     monaco.editor.defineTheme('my-theme', {
       base: 'vs-dark',
       inherit: true,
-      rules: [{ background: 'EDF1F5'}],
+      rules: [{ background: 'EDF1F5' }],
       colors: {
         'editor.foreground': '#ffffff',
-        'editor.background': '#000b1c',
-        'editorCursor.foreground': '#8B0000',
-        'editor.lineHighlightBackground': '#0000FF20',
-        'editorLineNumber.foreground': '#008800',
-        'editor.selectionBackground': '#88000030',
-        'editor.inactiveSelectionBackground': '#88000015',
-        'editorSuggestWidget.background': '#D4D4D4',
-        'editorSuggestWidget.border': '#888888',
-        'editorSuggestWidget.foreground': '#000000',
-        'editorSuggestWidget.selectedBackground': '#0044BB',
-        'editorWidget.background': '#000000',
-        'minimap.background': '#000b1c',
-        'minimapSlider.background': '#4A4A4A',
-        'minimapSlider.hoverBackground': '#5A5A5A',
-        'minimapSlider.activeBackground': '#6A6A6A',
-        'scrollbar.shadow': '#000000',
-        'scrollbarSlider.background': '#797979',
-        'scrollbarSlider.hoverBackground': '#717171',
+        'editor.background': '#0d1117',
+        'editorCursor.foreground': '#c9d1d9',
+        'editor.lineHighlightBackground': '#161b22',
+        'editorLineNumber.foreground': '#8b949e',
+        'editor.selectionBackground': '#3fb95040',
+        'editor.inactiveSelectionBackground': '#3fb95020',
+        'editorSuggestWidget.background': '#161b22',
+        'editorSuggestWidget.border': '#30363d',
+        'editorSuggestWidget.foreground': '#c9d1d9',
+        'editorSuggestWidget.selectedBackground': '#2ea04380',
+        'editorWidget.background': '#161b22',
+        'minimap.background': '#0d1117',
+        'minimapSlider.background': '#30363d80',
+        'minimapSlider.hoverBackground': '#30363dcc',
+        'minimapSlider.activeBackground': '#30363d',
+        'scrollbar.shadow': '#0008',
+        'scrollbarSlider.background': '#30363d80',
+        'scrollbarSlider.hoverBackground': '#30363dcc',
       }
     });
 
@@ -106,15 +105,34 @@ const EditorMain = () => {
         )} 
       </div>)
       }
-      {currentFile ? (<Editor
+      {currentFile ? (
+      <Editor
         height="100vh"
         width="100%"
-        defaultValue='Start from here...'
         language={currentLanguage}
         onMount={handleEditorDidMount}
         onChange={handleCodeChange}
         value={currentCode[currentFile]}
         theme="my-theme"
+        options={
+          {
+            fontSize: 16,
+            wordWrap: 'on',
+            minimap: {
+              enabled: false
+            },
+            scrollbar: {
+              vertical: 'hidden',
+              horizontal: 'auto',
+              useShadows: false,
+              verticalHasArrows: false,
+              horizontalHasArrows: false,
+              verticalScrollbarSize: 10,
+              horizontalScrollbarSize: 10,
+              arrowSize: 30
+            }
+          }
+        }
       />): (
         <div className={styles.imgBlock}>
           <img src={logo.src} alt="Logo" className={styles.logoImg}/>
