@@ -42,9 +42,6 @@ https://github.com/Saumya40-codes/CoDev/assets/115284013/43cfbfca-b935-4e4f-ba64
 
 https://github.com/Saumya40-codes/CoDev/assets/115284013/ec6abdf3-e77f-40ec-9adb-2e0c28bfa9af
 
-
-**deployed api on render just doesnt seem to be working for web sockets :(**
-
 ## Features
 
 - Real-time collaboration: Multiple developers can work on the same project simultaneously, with changes reflected instantly.
