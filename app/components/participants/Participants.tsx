@@ -42,8 +42,9 @@ const Participants = () => {
                 body: JSON.stringify({ projectId })
             });
 
-
             const data = await res.json();
+
+            console.log(data);
             setParticipants(data);
         }
         catch (err) {
@@ -73,6 +74,9 @@ const Participants = () => {
         socket.on('user-left', (user_id: string) => {
             handleUserLeft(user_id);
         });
+        socket.on('participants-updated', async () => { 
+            await getParticipants();
+        });
 
         socket.on('project-state', async (data) => {
             const {projectId, fileUserMap, fileSaved, shareId, admin} = data;
@@ -94,7 +98,11 @@ const Participants = () => {
                 dispatch(setShareId(shareId));
             }
         });
-    }, [projectId, shareId]);
+    }, []);
+
+    useEffect(() => {
+        getParticipants();
+    }, []);
 
     
   return (

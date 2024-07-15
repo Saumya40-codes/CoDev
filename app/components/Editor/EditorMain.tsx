@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useEffect} from 'react'
+import React, { useEffect, useCallback } from 'react'
 import Editor from '@monaco-editor/react';
 import { useAppSelector, useAppDispatch } from '@/app/lib/redux/hooks';
 import logo from '../../../styles/images/logo.png';
@@ -12,6 +12,7 @@ import { editor } from 'monaco-editor';
 import socket from '@/app/lib/socket/socket';
 import { Session } from '@/app/lib/types/types';
 import { useSession } from 'next-auth/react';
+import debounce from 'lodash/debounce';
 
 const EditorMain = () => {    
   const currentFile = useAppSelector((state) => state?.file.currentFile);
@@ -56,23 +57,42 @@ const EditorMain = () => {
     editor.focus();
   }
 
-  useEffect(()=>{
-    socket.on('code-changed', (value) => {
-      dispatch(setCurrentCode({fileId: value.fileId, code: value.value}));
-      dispatch(setFileUser({name: value.name ,fileId: value.fileId}));
+  const emitCodeChange = useCallback(debounce((value: string) => {
+    socket.emit('code-changed', {
+      projectId,
+      fileId: currentFile,
+      value,
+      name: session?.user?.name
     });
+  }, 100), [projectId, currentFile, session?.user?.name]);
+
+  useEffect(() => {
+    const handleCodeChanged = (value: { fileId: string; value: string; name: string }) => {
+      dispatch(setCurrentCode({ fileId: value.fileId, code: value.value }));
+      dispatch(setFileUser({ name: value.name, fileId: value.fileId }));
+    };
+
+    socket.on('code-changed', handleCodeChanged);
+    socket.on('connect', () => console.log('Socket connected'));
+    socket.on('disconnect', () => console.log('Socket disconnected'));
+    socket.on('error', (error) => console.error('Socket error:', error));
 
     return () => {
-      socket.off('code-changed');
+      socket.off('code-changed', handleCodeChanged);
+      socket.off('connect');
+      socket.off('disconnect');
+      socket.off('error');
     }
-  }, []);
+  }, [dispatch]);
 
   const handleCodeChange = (value: string | undefined, event: editor.IModelContentChangedEvent) => {
-    dispatch(setCurrentCode({fileId: currentFile, code: value}));
-    dispatch(setFileUser({name: session?.user?.name ,fileId: currentFile}));
-    socket.emit('code-changed', {projectId,fileId: currentFile, value, name: session?.user?.name});
-    if(fileSaved) {
-      dispatch(setFileSaved({fileId: currentFile, saved: false}));
+    if (value !== undefined) {
+      dispatch(setCurrentCode({fileId: currentFile, code: value}));
+      dispatch(setFileUser({name: session?.user?.name, fileId: currentFile}));
+      emitCodeChange(value);
+      if(fileSaved) {
+        dispatch(setFileSaved({fileId: currentFile, saved: false}));
+      }
     }
   }
 
@@ -84,14 +104,18 @@ const EditorMain = () => {
         return;
       }
 
-      await fetch('/api/file/addCode', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({fileId: currentFile, code: currentCode[currentFile]})
-      });
-      return;
+      try {
+        await fetch('/api/file/addCode', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({fileId: currentFile, code: currentCode[currentFile]})
+        });
+      } catch (error) {
+        console.error('Failed to save file:', error);
+        dispatch(setFileSaved({fileId: currentFile, saved: false}));
+      }
     }
   }
 

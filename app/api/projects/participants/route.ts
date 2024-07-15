@@ -4,7 +4,8 @@ import client from "@/app/lib/redis/db";
 
 export async function POST(req:Request, res: Response) {
   try{
-    const { projectId, userId } = await req.json();    
+    const { projectId, userId } = await req.json();  
+    
     const project = await prisma.projects.findUnique({
         where: { id: projectId },
     });
