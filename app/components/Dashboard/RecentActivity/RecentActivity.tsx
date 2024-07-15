@@ -5,6 +5,7 @@ import styles from './recentactivity.module.css';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Session } from '@/app/lib/types/types';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Project {
     id: string;
@@ -17,20 +18,20 @@ interface DataProps {
     projects: Project[];
 }
 
+const ITEMS_PER_PAGE = 10;
+
 const RecentActivity = () => {
     const [mainData, setMainData] = useState<DataProps>();
-    const { data:session } = useSession() as { data: Session };
-    let userId = session?.user?.id;
+    const [currentPage, setCurrentPage] = useState(1);
+    const { data: session } = useSession() as { data: Session };
     const router = useRouter();
 
-    useEffect(()=>{
-        userId = session?.user?.id;
-    }, [session?.user?.id])
+    const totalPages = Math.ceil((mainData?.projects?.length || 0) / ITEMS_PER_PAGE);
 
     useEffect(() => {
         const getProjects = async () => {
             try {
-                const res = await fetch(`/api/user/${userId}/projects`, {
+                const res = await fetch(`/api/user/${session?.user?.id}/projects`, {
                     method: 'GET',
                 });
                 const data = await res.json();
@@ -39,44 +40,65 @@ const RecentActivity = () => {
                 console.error(err);
             }
         };
-        getProjects();
-    }, []);
+        if (session?.user?.id) {
+            getProjects();
+        }
+    }, [session?.user?.id]);
+
+    const currentProjects = mainData?.projects?.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
+
+    const handlePageChange = (newPage: number) => {
+        setCurrentPage(newPage);
+    };
 
     return (
         <div className={styles.recProjects}>
-            <span>Recent Activity</span>
-            {mainData?.projects && mainData?.projects.length > 0 ? (
-                <div className={styles.projects}>
+            <span className={styles.header}>Recent Activity</span>
+            {currentProjects && currentProjects.length > 0 ? (
+                <div className={styles.projectsContainer}>
                     <div className={styles.updatedAt}>
                         <span>Updated At</span>
                     </div>
-                    {mainData?.projects?.map((project) => (
+                    {currentProjects.map((project) => (
                         <div
                             key={project.id}
                             className={styles.project}
                             onClick={() => router.push(`/project/${project.id}`)}
                         >
                             <div>
-                                {project.type === 'owner' ? (
-                                    <span>
-                                        You updated your project{' '}
-                                        <span className={styles.projectName}>{project.name}</span>
-                                    </span>
-                                ) : (
-                                    <span>
-                                        You collaborated to a project{' '}
-                                        <span className={styles.projectName}>{project.name}</span>
-                                    </span>
-                                )}
+                                <span>
+                                    {project.type === 'owner' ? 'You updated your project' : 'You collaborated on a project'}{' '}
+                                    <span className={styles.projectName}>{project.name}</span>
+                                </span>
                             </div>
-                            <div>
-                                <div>{new Date(project.updatedAt).toLocaleString()}</div>
-                            </div>
+                            <div>{new Date(project.updatedAt).toLocaleString()}</div>
                         </div>
                     ))}
                 </div>
             ) : (
                 <span>No Recent Activity Found...</span>
+            )}
+            {totalPages > 1 && (
+                <div className={styles.pagination}>
+                    <button 
+                        onClick={() => handlePageChange(currentPage - 1)} 
+                        disabled={currentPage === 1}
+                        className={styles.pageButton}
+                    >
+                        <ChevronLeft size={20} />
+                    </button>
+                    <span> Viewing page {currentPage} of {totalPages}</span>
+                    <button 
+                        onClick={() => handlePageChange(currentPage + 1)} 
+                        disabled={currentPage === totalPages}
+                        className={styles.pageButton}
+                    >
+                        <ChevronRight size={20} />
+                    </button>
+                </div>
             )}
         </div>
     );

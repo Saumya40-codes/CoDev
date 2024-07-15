@@ -12,19 +12,14 @@ const DashboardContents = () => {
   return (
     <div className={styles.dashBody}>
         {createProject && (
-            <div className={createProject && styles.overlay || ''}>
-            <CreateProject setCreateProject={setCreateProject} />
+            <div className={createProject ? styles.overlay: ''}>
+                <CreateProject setCreateProject={setCreateProject}/>
             </div>
-        )}
-        <div className={styles.newProj}>
-            <span>
-                Create a new Project
-            </span>
-            <button className={styles.createButton} onClick={()=> setCreateProject((prevClicked)=>!prevClicked)}>
-                Create
-            </button>
-            <hr className={styles.ruler} />
-        </div>
+        ) }
+        <h1 className={styles.dashTitle}>Create a New Project</h1>
+        <button className={styles.createBtn} onClick={()=>setCreateProject(true)}>Create</button>
+
+        <hr className={styles.hr}/>
         <RecentActivity />
     </div>
   )
