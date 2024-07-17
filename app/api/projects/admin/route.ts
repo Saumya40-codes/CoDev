@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/prisma";
 
-export const POST = async(req: Request, res: Response) => {
+export const POST = async (req: Request, res: Response) => {    
     try{
         const { projectId } = await req.json();
-
         const owner = await prisma.projects.findFirst({
             where: {
                 id: projectId

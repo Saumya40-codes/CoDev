@@ -33,7 +33,9 @@ const Project = ({ params }: { params: { id: string } }) => {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ projectId })
+          body: JSON.stringify({ 
+             projectId: params.id
+           })
         });
         const data = await res.json();
         setAdmin(data.userId);
