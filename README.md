@@ -66,7 +66,7 @@ https://github.com/Saumya40-codes/CoDev/assets/115284013/ec6abdf3-e77f-40ec-9adb
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/Saumya40-codes/CoDev.git -b localhost-setup
+git clone https://github.com/Saumya40-codes/CoDev.git -b local
 ```
 2. Install Dependencies
 ```bash
