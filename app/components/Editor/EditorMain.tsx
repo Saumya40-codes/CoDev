@@ -12,13 +12,11 @@ import { editor } from 'monaco-editor';
 import socket from '@/app/lib/socket/socket';
 import { Session } from '@/app/lib/types/types';
 import { useSession } from 'next-auth/react';
-import debounce from 'lodash/debounce';
 
 const EditorMain = () => {    
   const currentFile = useAppSelector((state) => state?.file.currentFile);
   const currentLanguage = useAppSelector((state) => state?.file.currentLanguage);
   const currentCode = useAppSelector((state) => state?.file.currentCode);
-  const fileSaved = useAppSelector((state) => state?.file.fileSaved);
   const shareId = useAppSelector((state) => state?.project.shareId);
   const projectId = useAppSelector((state) => state?.project.projectId);
   const fileUserId = useAppSelector((state) => state.editing.fileUserMap);
@@ -57,19 +55,20 @@ const EditorMain = () => {
     editor.focus();
   }
 
-  const emitCodeChange = useCallback(debounce((value: string) => {
+  const emitCodeChange = (value: string) => {
     socket.emit('code-changed', {
-      projectId,
       fileId: currentFile,
+      projectId,
       value,
       name: session?.user?.name
     });
-  }, 100), [projectId, currentFile, session?.user?.name]);
+  };
 
   useEffect(() => {
     const handleCodeChanged = (value: { fileId: string; value: string; name: string }) => {
       dispatch(setCurrentCode({ fileId: value.fileId, code: value.value }));
       dispatch(setFileUser({ name: value.name, fileId: value.fileId }));
+      dispatch(setFileSaved({ fileId: value.fileId, saved: false }));
     };
 
     socket.on('code-changed', handleCodeChanged);
@@ -86,13 +85,13 @@ const EditorMain = () => {
   }, [dispatch]);
 
   const handleCodeChange = (value: string | undefined, event: editor.IModelContentChangedEvent) => {
+    console.log('Code changed:', value);
     if (value !== undefined) {
+      console.log(currentFile, session?.user?.name);
       dispatch(setCurrentCode({fileId: currentFile, code: value}));
       dispatch(setFileUser({name: session?.user?.name, fileId: currentFile}));
+      dispatch(setFileSaved({fileId: currentFile, saved: false}));
       emitCodeChange(value);
-      if(fileSaved) {
-        dispatch(setFileSaved({fileId: currentFile, saved: false}));
-      }
     }
   }
 

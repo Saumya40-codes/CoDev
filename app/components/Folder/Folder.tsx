@@ -5,11 +5,9 @@ import styles from './folder.module.css'
 import { ChevronDownIcon, ChevronLeftIcon, AddIcon, EmailIcon, WarningIcon } from '@chakra-ui/icons'
 import NewFile from './NewFile/NewFile'
 import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks';
-import { setProjectId } from '@/app/lib/redux/features/ProjectSlice'
-import { setCurrentFile, setCurrentLanguage, setCurrentCode, setFileSaved } from '@/app/lib/redux/features/FileSlice'
+import { setCurrentFile, setCurrentLanguage, setCurrentCode } from '@/app/lib/redux/features/FileSlice'
 import { setShareId } from '@/app/lib/redux/features/ProjectSlice'
 import socket from '@/app/lib/socket/socket'
-import { useSession } from 'next-auth/react'
 import { Tooltip } from '@chakra-ui/react'
 
 interface FolderProps {
@@ -36,8 +34,6 @@ const Folder = ({id}:{id:string}) => {
   const currentFile = useAppSelector((state)=>state?.file?.currentFile);
   const fileSaved = useAppSelector((state)=>state?.file?.fileSaved);
   const dispatch = useAppDispatch();
-  const {data: session} = useSession();
-
 
   const getFolders = async() => {
       try{
@@ -74,19 +70,12 @@ const Folder = ({id}:{id:string}) => {
           dispatch(setShareId(returnPayload.shareId))
         }
       }
-
     getReturnedData();
   }, [currentFile, id]);
 
   useEffect(()=>{
-    if(id){
-      dispatch(setProjectId({projectId: id}));
-    }
-  }, [id]); 
-
-  useEffect(()=>{
-    socket.on('new-file', ()=>{
-      getFolders();
+    socket.on('new-file', async ()=>{
+      await getFolders();
     });
 
     return ()=>{
@@ -119,7 +108,6 @@ const Folder = ({id}:{id:string}) => {
         dispatch(setCurrentLanguage(data.language));
         dispatch(setCurrentCode({fileId, code: data.code.code}));
         dispatch(setCurrentFile(fileId));
-        dispatch(setFileSaved({fileId, saved: true}));
       }
     }
     catch(err){
@@ -157,7 +145,7 @@ const Folder = ({id}:{id:string}) => {
                   </div>
                   <div key={file?.id} className={styles.file}>
                     <span onClick={(e)=>handleFileChange(e,file.id,file.name)} className={styles.fileNm}>{file?.name}</span>
-                    {!fileSaved && file.id === currentFile && (
+                    {!fileSaved[file.id] && (
                       <Tooltip label="File not saved. Press Ctrl Q" aria-label="A tooltip">
                         <WarningIcon color="red.500" marginLeft='10px' />
                       </Tooltip>

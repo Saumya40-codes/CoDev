@@ -5,7 +5,7 @@ import { EmailIcon } from '@chakra-ui/icons'
 import styles from './newfile.module.css'
 import { useAppSelector, useAppDispatch } from '@/app/lib/redux/hooks';
 import { templates } from '@/app/lib/Apis/templates';
-import { setCurrentFile, setCurrentCode, setCurrentLanguage } from '@/app/lib/redux/features/FileSlice';
+import { setCurrentFile, setCurrentCode, setCurrentLanguage, setFileSaved } from '@/app/lib/redux/features/FileSlice';
 import socket from '@/app/lib/socket/socket';
 
 interface NewFileProps {
@@ -82,6 +82,7 @@ const NewFile = ({setNewFile}:NewFileProps) => {
           dispatch(setCurrentFile(data.fileId));
           dispatch(setCurrentCode({fileId: data.fileId, code: templates[fileType as keyof typeof templates] || ''}));
           dispatch(setCurrentLanguage(fileType));
+          dispatch(setFileSaved({fileId: data.fileId, saved: true}));
 
           setNewFile(false);
           setfileName('');

@@ -41,10 +41,12 @@ io.on('connection', (socket) => {
     });
 
     socket.on('new-file', (projectId: string) => {
+        console.log('new-file', projectId);
         socket.broadcast.to(projectId).emit('new-file');
     })
 
     socket.on('code-changed', (data) => {
+        console.log(data);
         io.in(data.projectId).emit('code-changed', data);
     });
 
