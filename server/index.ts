@@ -32,8 +32,7 @@ io.on('connection', (socket) => {
     socket.on('join-project', (projectId:string, userId: string) => {
         socket.join(projectId);
         socket.handshake.query = { projectId, userId};
-        io.in(projectId).emit('user-joined');
-        io.in(projectId).emit('participants-updated'); 
+        socket.broadcast.to(projectId).emit('user-joined');
     })
 
     socket.on('project-state', (data) => {
@@ -48,11 +47,14 @@ io.on('connection', (socket) => {
         io.in(data.projectId).emit('code-changed', data);
     });
 
-    socket.on('disconnect', () => {
+    socket.on('code-saved', (data) => {
+        io.in(data.projectId).emit('code-saved', data);
+    });
+
+    socket.on('leave-project', (projectId, userId ) => {
+        socket.leave(projectId)
+        socket.to(projectId).emit('user-left', userId)
         socket.disconnect();
-        const { projectId, userId } = socket.handshake.query as { projectId: string, userId: string };
-        socket.broadcast.to(projectId).emit('user-left',userId);
-        io.in(projectId).emit('participants-updated'); 
     });
 });
 

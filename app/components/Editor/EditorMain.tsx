@@ -55,14 +55,14 @@ const EditorMain = () => {
     editor.focus();
   }
 
-  const emitCodeChange = (value: string) => {
+  const emitCodeChange = useCallback((value: string) => {
     socket.emit('code-changed', {
       fileId: currentFile,
       projectId,
       value,
       name: session?.user?.name
     });
-  };
+  }, [currentFile, projectId, session?.user?.name]);
 
   useEffect(() => {
     const handleCodeChanged = (value: { fileId: string; value: string; name: string }) => {
@@ -72,17 +72,15 @@ const EditorMain = () => {
     };
 
     socket.on('code-changed', handleCodeChanged);
-    socket.on('connect', () => console.log('Socket connected'));
-    socket.on('disconnect', () => console.log('Socket disconnected'));
-    socket.on('error', (error) => console.error('Socket error:', error));
+    socket.on('code-saved', (data) => {
+      dispatch(setFileSaved({ fileId: data.fileId, saved: true }));
+    });
 
     return () => {
       socket.off('code-changed', handleCodeChanged);
-      socket.off('connect');
-      socket.off('disconnect');
-      socket.off('error');
+      socket.off('code-saved');
     }
-  }, [dispatch]);
+  }, [dispatch, projectId]);
 
   const handleCodeChange = (value: string | undefined, event: editor.IModelContentChangedEvent) => {
     if (value !== undefined) {
@@ -109,6 +107,8 @@ const EditorMain = () => {
           },
           body: JSON.stringify({fileId: currentFile, code: currentCode[currentFile]})
         });
+
+        socket.emit('code-saved', {fileId: currentFile, projectId});
       } catch (error) {
         console.error('Failed to save file:', error);
         dispatch(setFileSaved({fileId: currentFile, saved: false}));

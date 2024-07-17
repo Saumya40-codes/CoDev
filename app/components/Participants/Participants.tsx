@@ -15,6 +15,9 @@ const Participants = () => {
     const projectId = useAppSelector(state => state.project.projectId);
     const [participants, setParticipants] = useState<Participant[]>([]);
     const shareId = useAppSelector(state => state.project.shareId);
+    const admin = useAppSelector((state) => state.project.projectAdmin);
+    const fileUserMap = useAppSelector(state => state.editing.fileUserMap);
+    const fileSaved = useAppSelector(state => state.file.fileSaved);
     const dispatch = useAppDispatch();
 
     const getParticipants = useCallback(async () => {
@@ -32,20 +35,61 @@ const Participants = () => {
         } catch (err) {
             console.error('Failed to fetch participants:', err);
         }
-    }, []);
+    }, [projectId]);
+
+    const removeParticipant = useCallback(async (userId: string) => {
+        try {
+            const res = await fetch('/api/projects/removeParticipant', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ projectId, userId })
+            });
+
+            const data = await res.json();
+            if (data.message === 'Participant removed successfully') {
+                getParticipants();
+            }
+        } catch (err) {
+            console.error('Failed to remove participant:', err);
+        }
+    }, [projectId, getParticipants]);
+
+    const emitProjectState = () => {
+        socket.emit('project-state', {
+            projectId,
+            fileUserMap,
+            fileSaved,
+            shareId,
+            admin
+        });
+      };
 
     useEffect(() => {
-        socket.on('user-joined', getParticipants);
-        socket.on('user-left', getParticipants);
+        const handleUserJoined = async() => {
+            console.log("User joined");
+            emitProjectState();
+            await getParticipants();
+        };
+
+        const handleUserLeft = async(userId: string) => {
+            console.log("User left", userId);
+            await removeParticipant(userId);
+            setParticipants((prev) => prev.filter((p) => p.id !== userId));
+        }
+
+        socket.on('user-joined', handleUserJoined);
+        socket.on('user-left', handleUserLeft);
 
         const syncInterval = setInterval(getParticipants, 30000); // Sync every 30 seconds
 
         return () => {
-            socket.off('user-left', getParticipants);
-            socket.off('project-state');
+            socket.off('user-joined', handleUserJoined);
+            socket.off('user-left', handleUserLeft); 
             clearInterval(syncInterval);
         };
-    }, []);
+    }, [getParticipants]);
 
     if (!shareId) return null;
 
