@@ -7,7 +7,7 @@ import Link from 'next/link'
 import Auth from '../../Auth/Auth'
 import Profile from '../../MainPage/Profile/Profile'
 import Menubar from '../Menubar/Menubar'
-import Participants from '../../Participants/Participants'
+import Participants from '@/app/components/Participants/Participants'
 import Coderunner from '../CodeRunner/Coderunner'
 import { useSession } from 'next-auth/react'
 
