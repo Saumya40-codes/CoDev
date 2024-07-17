@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAppSelector, useAppDispatch } from '@/app/lib/redux/hooks';
-import { setShareId, setShareIdLink } from '@/app/lib/redux/features/ProjectSlice';
+import { setShareId, setShareIdLink, setProjectAdmin } from '@/app/lib/redux/features/ProjectSlice';
 import { AddIcon, CopyIcon, CheckIcon } from '@chakra-ui/icons';
 import {
     Popover,
@@ -15,7 +15,8 @@ import {
     PopoverCloseButton,
   } from '@chakra-ui/react'
 import styles from './menubar.module.css'
-  
+import { useSession } from 'next-auth/react';
+import { Session } from '@/app/lib/types/types';  
 
 const Menubar = () => {
 
@@ -24,6 +25,8 @@ const Menubar = () => {
     const shareIdLink = useAppSelector(state => state.project.shareLink);
     const dispatch = useAppDispatch();
     const [copied,setCopied] = useState<boolean>(false);
+    const {data: session} = useSession() as {data: Session | undefined};
+    const userId = session?.user?.id;
 
     const shareProject = async (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
@@ -37,9 +40,8 @@ const Menubar = () => {
           });
 
           const data = await res.json();
-          const customId = `${window?.location.href}?shareId=${data.shareId}`
           dispatch(setShareId(data.shareId));
-          dispatch(setShareIdLink(customId));
+          dispatch(setProjectAdmin(userId));
         }
         catch(err){
           console.log(err);
@@ -69,7 +71,7 @@ const Menubar = () => {
         <PopoverHeader>
           <span className={styles.text}>Collaborate with others!</span>
         </PopoverHeader>
-        {shareIdLink &&(
+        {shareId && shareIdLink && (
         <PopoverBody display='flex' flexDirection='row' gap='15px'>
           <input type="text" value={shareIdLink} readOnly className={styles.inpt}/>
           {copied? <CheckIcon color='green.500' marginTop='7px' /> : <CopyIcon color='whiteAlpha.800' marginTop='7px' cursor='pointer' onClick={handlecopiedClick} />}
