@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAppSelector, useAppDispatch } from '@/app/lib/redux/hooks';
-import { setShareId, setShareIdLink, setProjectAdmin } from '@/app/lib/redux/features/ProjectSlice';
+import { setShareId, setShareIdLink } from '@/app/lib/redux/features/ProjectSlice';
 import { AddIcon, CopyIcon, CheckIcon } from '@chakra-ui/icons';
 import {
     Popover,
@@ -41,7 +41,6 @@ const Menubar = () => {
 
           const data = await res.json();
           dispatch(setShareId(data.shareId));
-          dispatch(setProjectAdmin(userId));
         }
         catch(err){
           console.log(err);

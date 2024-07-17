@@ -8,7 +8,7 @@ import EditorMain from '@/app/components/Editor/EditorMain'
 import Terminal from '@/app/components/Terminal/Terminal'
 import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks'
 import socket from '@/app/lib/socket/socket'
-import { setShareId, setShareIdLink, setProjectId, setProjectAdmin } from '@/app/lib/redux/features/ProjectSlice'
+import { setShareId, setShareIdLink, setProjectId } from '@/app/lib/redux/features/ProjectSlice'
 import { setFileUser } from '@/app/lib/redux/features/EditingSlice'
 import { setFileSaved } from '@/app/lib/redux/features/FileSlice'
 import { useSession } from 'next-auth/react'
@@ -17,14 +17,33 @@ import { Session } from '@/app/lib/types/types'
 const Project = ({ params }: { params: { id: string } }) => {
   const shareId = useAppSelector((state) => state.project.shareId);
   const projectId = useAppSelector((state) => state.project.projectId);
-  const admin = useAppSelector((state) => state.project.projectAdmin);
   const dispatch = useAppDispatch();
   const { data: session } = useSession() as { data: Session | undefined };
   const userId = session?.user?.id;
   const hasJoined = useRef(false);
   const isMounted = useRef(true);
+  const [admin, setAdmin] = React.useState<string>();
 
   useEffect(() => {
+
+    const getAdmin = async () => {
+      try {
+        const res = await fetch('/api/projects/admin', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ projectId })
+        });
+        const data = await res.json();
+        setAdmin(data.userId);
+      } catch (error) {
+        console.error('Failed to get admin:', error);
+      }
+    }
+
+    getAdmin();
+
     return () => {
       isMounted.current = false;
     };
@@ -73,7 +92,7 @@ const Project = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     const handleParticipant = async() => {
       if ((shareId || (admin === userId)) && projectId && userId) {
-        if(admin === userId){
+        if(admin === userId && shareId){
           joinProject(projectId, userId);
         }
         else{
@@ -98,7 +117,7 @@ const Project = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     const handleProjectState = (data: any) => {
-      const { projectId, fileUserMap, fileSaved, shareId, admin } = data;
+      const { projectId, fileUserMap, fileSaved, shareId } = data;
       
       Object.entries(fileUserMap).forEach(([fileId, name]) => {
         dispatch(setFileUser({ fileId, name: name as string }));
@@ -110,7 +129,6 @@ const Project = ({ params }: { params: { id: string } }) => {
 
       dispatch(setProjectId({ projectId }));
       dispatch(setShareIdLink(`${window.location.href}?shareId=${shareId}`));
-      dispatch(setProjectAdmin(admin));
 
       if (shareId) {
         dispatch(setShareId(shareId));

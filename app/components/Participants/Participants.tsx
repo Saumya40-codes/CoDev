@@ -15,7 +15,6 @@ const Participants = () => {
     const projectId = useAppSelector(state => state.project.projectId);
     const [participants, setParticipants] = useState<Participant[]>([]);
     const shareId = useAppSelector(state => state.project.shareId);
-    const admin = useAppSelector((state) => state.project.projectAdmin);
     const fileUserMap = useAppSelector(state => state.editing.fileUserMap);
     const fileSaved = useAppSelector(state => state.file.fileSaved);
     const dispatch = useAppDispatch();
@@ -62,7 +61,6 @@ const Participants = () => {
             fileUserMap,
             fileSaved,
             shareId,
-            admin
         });
       };
 
