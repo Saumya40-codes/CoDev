@@ -85,9 +85,7 @@ const EditorMain = () => {
   }, [dispatch]);
 
   const handleCodeChange = (value: string | undefined, event: editor.IModelContentChangedEvent) => {
-    console.log('Code changed:', value);
     if (value !== undefined) {
-      console.log(currentFile, session?.user?.name);
       dispatch(setCurrentCode({fileId: currentFile, code: value}));
       dispatch(setFileUser({name: session?.user?.name, fileId: currentFile}));
       dispatch(setFileSaved({fileId: currentFile, saved: false}));

@@ -28,7 +28,6 @@ const Participants = () => {
             });
 
             const data = await res.json();
-            console.log('Participants:', data);
             setParticipants(data.map((p: any) => p.user));
         } catch (err) {
             console.error('Failed to fetch participants:', err);
