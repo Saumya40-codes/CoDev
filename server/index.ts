@@ -8,6 +8,7 @@ import os from 'os';
 import { langs } from './controllers/codeConfig';
 import { ext } from './controllers/codeConfig';
 import cors from 'cors';
+import dotenv from 'dotenv';
 
 const app = express();
 app.use(express.json());
@@ -16,6 +17,7 @@ app.use(cors({
     origin: ['http://localhost:3000','https://co-dev-sigma.vercel.app'],
     credentials: true
 }));
+dotenv.config();
 
 const server = http.createServer(app);
 
@@ -26,6 +28,7 @@ const io = new Server(server, {
     }
 });
 
+const NEXT_API_ENDPOINT = process.env.NEXT_API_ENDPOINT || 'http://localhost:3000/api';
 
 io.on('connection', (socket) => {
 
@@ -54,7 +57,7 @@ io.on('connection', (socket) => {
     socket.on('leave-project', (projectId, userId ) => {
 
         const removeParticipant = async () => {
-            await fetch('http://localhost:3000/api/projects/removeParticipant', {
+            await fetch(`${NEXT_API_ENDPOINT}/projects/removeParticipant`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

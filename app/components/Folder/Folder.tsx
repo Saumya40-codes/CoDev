@@ -59,7 +59,6 @@ const Folder = ({id}:{id:string}) => {
   useEffect(()=>{
     const getReturnedData = async() => {
       const returnPayload = await getFolders() as FolderProps;
-      console.log(returnPayload);
       if(returnPayload && returnPayload.files){
           const file = returnPayload.files[0];
           if(currentFile === ''){
