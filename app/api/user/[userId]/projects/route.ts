@@ -14,7 +14,7 @@ export const GET = async (req: Request, { params }: { params: { userId: string }
                         id: true,
                         name: true,
                         createdAt: true,
-                        updatedAt: true,
+                        updatedAt: true
                     },
                     orderBy: {
                         updatedAt: 'desc'
@@ -33,7 +33,8 @@ export const GET = async (req: Request, { params }: { params: { userId: string }
                         id: true,
                         name: true,
                         createdAt: true,
-                        updatedAt: true
+                        updatedAt: true,
+                        shareId: true
                     }
                 }
             }

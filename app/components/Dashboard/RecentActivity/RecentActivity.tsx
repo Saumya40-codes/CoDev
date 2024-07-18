@@ -12,6 +12,7 @@ interface Project {
     name: string;
     updatedAt: string;
     type: string;
+    shareId: string;
 }
 
 interface DataProps {
@@ -66,7 +67,7 @@ const RecentActivity = () => {
                         <div
                             key={project.id}
                             className={styles.project}
-                            onClick={() => router.push(`/project/${project.id}`)}
+                            onClick={() => router.push(`/project/${project.id}${project.shareId ? `?shareId=${project.shareId}` : ''}`)}
                         >
                             <div>
                                 <span>

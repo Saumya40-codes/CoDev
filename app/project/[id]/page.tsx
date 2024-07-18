@@ -20,7 +20,6 @@ const Project = ({ params }: { params: { id: string } }) => {
   const dispatch = useAppDispatch();
   const { data: session } = useSession() as { data: Session | undefined };
   const userId = session?.user?.id;
-  const hasJoined = useRef(false);
   const isMounted = useRef(true);
   const [admin, setAdmin] = React.useState<string>();
 
@@ -51,28 +50,21 @@ const Project = ({ params }: { params: { id: string } }) => {
     };
   }, []);
 
-  const joinProject = useCallback((projectId: string, userId: string | undefined) => {
-    if (userId && !hasJoined.current) {
+  const joinProject = (projectId: string, userId: string | undefined) => {
+    if (userId) {
       socket.emit('join-project', projectId, userId);
       dispatch(setShareId(shareId));
       dispatch(setShareIdLink(`${window.location.href}?shareId=${shareId}`));
-      hasJoined.current = true;
     }
-  }, [dispatch, shareId]);
+  }
 
   const leaveProject = useCallback((projectId: string, userId: string | undefined) => {
-    if (userId && hasJoined.current) {
-      socket.emit('leave-project', projectId, userId, (error: any) => {
-        if (error) {
-          console.error(`Failed to leave project: ${error}`);
-        } else {
-          hasJoined.current = false;
-        }
-      });
+    if (userId) {
+      socket.emit('leave-project', projectId, userId);
     }
   }, [projectId, userId]);
 
-  const addParticipant = useCallback(async (projectId: string, userId: string) => {
+  const addParticipant = async (projectId: string, userId: string) => {
     try {
       const res = await fetch('/api/projects/participants', {
         method: 'POST',
@@ -81,7 +73,6 @@ const Project = ({ params }: { params: { id: string } }) => {
         },
         body: JSON.stringify({ projectId, userId })
       });
-      const data = await res.json();
       
       if (res.status === 200) {
         joinProject(projectId, userId);
@@ -89,29 +80,26 @@ const Project = ({ params }: { params: { id: string } }) => {
     } catch (error) {
       console.error('Failed to add participant:', error);
     }
-  }, [joinProject]);
+  };
 
   useEffect(() => {
     const handleParticipant = async() => {
-      if ((shareId || (admin === userId)) && projectId && userId) {
-        if(admin === userId && shareId){
-          joinProject(projectId, userId);
-        }
-        else{
-          const url = new URL(window.location.href);
-          const urlShareId = url.searchParams.get('shareId');
-  
-          if (urlShareId === shareId || (admin === userId)) {
+      if (projectId !== '' && userId) {
+        const url = new URL(window.location.href);
+        const urlShareId = url.searchParams.get('shareId');
+    
+        if (shareId) {
+          if ((admin === userId) || (urlShareId === shareId)) {
             await addParticipant(projectId, userId);
           }
-        }
+        } 
       }
     }
   
     handleParticipant();
   
     return () => {
-      if (isMounted.current && projectId && userId) {
+      if (!isMounted.current && projectId && userId) {
         leaveProject(projectId, userId);
       }
     };

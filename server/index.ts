@@ -52,8 +52,26 @@ io.on('connection', (socket) => {
     });
 
     socket.on('leave-project', (projectId, userId ) => {
+
+        const removeParticipant = async () => {
+            await fetch('http://localhost:3000/api/projects/removeParticipant', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    projectId,
+                    userId
+                }
+            )});
+        }
+
+        removeParticipant();
         socket.leave(projectId)
         socket.to(projectId).emit('user-left', userId)
+    });
+
+    socket.on('disconnect', () => {
         socket.disconnect();
     });
 });

@@ -36,25 +36,6 @@ const Participants = () => {
         }
     }, [projectId]);
 
-    const removeParticipant = useCallback(async (userId: string) => {
-        try {
-            const res = await fetch('/api/projects/removeParticipant', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ projectId, userId })
-            });
-
-            const data = await res.json();
-            if (data.message === 'Participant removed successfully') {
-                getParticipants();
-            }
-        } catch (err) {
-            console.error('Failed to remove participant:', err);
-        }
-    }, [projectId, getParticipants]);
-
     const emitProjectState = () => {
         socket.emit('project-state', {
             projectId,
@@ -71,16 +52,14 @@ const Participants = () => {
             await getParticipants();
         };
 
-        const handleUserLeft = async(userId: string) => {
-            console.log("User left", userId);
-            await removeParticipant(userId);
+        const handleUserLeft = (userId: string) => {
             setParticipants((prev) => prev.filter((p) => p.id !== userId));
         }
 
         socket.on('user-joined', handleUserJoined);
         socket.on('user-left', handleUserLeft);
 
-        const syncInterval = setInterval(getParticipants, 30000); // Sync every 30 seconds
+        const syncInterval = setInterval(getParticipants, 10000);
 
         return () => {
             socket.off('user-joined', handleUserJoined);
