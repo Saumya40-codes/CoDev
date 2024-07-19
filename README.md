@@ -2,6 +2,11 @@
 
 codev is a rich code editor designed for developers to collaborate seamlessly on projects, create different files and codes, and invite other developers to join their projects. With real-time updates, users can see who has joined or left the project, as well as who is currently editing the code and execution of the code written.
 
+---
+
+Note: the deployed site will only support to execute js/ts codes, the rest of the available languages including C, C++, java, python and go won't work because as backend is deployed on render, running docker commands in it isn't possible, though it will work completely well on your local machine if docker is installed there
+
+---
 ## Demo
 
 1. Create a Project
