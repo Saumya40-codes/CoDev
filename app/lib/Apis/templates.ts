@@ -53,4 +53,25 @@ export const templates = {
     python: dedent`
         # Add your Python code here
         print('Hello, world!')`,
+    go : dedent`
+        // Add your Go code here
+        package main
+        import "fmt"
+        func main() {
+            fmt.Println("Hello, world!")
+        }`,
+    c : dedent`
+        // Add your C code here
+        #include <stdio.h>
+        int main() {
+            printf("Hello, world!\\n");
+            return 0;
+        }`,
+    cpp : dedent`
+        // Add your C++ code here
+        #include <iostream>
+        int main() {
+            std::cout << "Hello, world!" << std::endl;
+            return 0;
+        }`
 }

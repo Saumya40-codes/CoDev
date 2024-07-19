@@ -1,15 +1,8 @@
-export const langs = {
-    'python': 'saumyashah40/compile-langs:python-env',
-    'javascript': 'js-env',
-    'java': 'java-env',
-    'cpp': 'cpp-env',
-    'go': 'go-env'
-}
-
-export const ext = {
-    'python': 'py',
-    'javascript': 'js',
-    'java': 'java',
-    'cpp': 'cpp',
-    'go': 'go'
-}
+export const languageConfigs = {
+    python: { ext: 'py', cmd: 'python' },
+    javascript: { ext: 'js', cmd: 'javascript' },
+    java: { ext: 'java', cmd: 'java' },
+    c: { ext: 'c', cmd: 'c' },
+    cpp: { ext: 'cpp', cmd: 'cpp' },
+    go: { ext: 'go', cmd: 'go' },
+};
