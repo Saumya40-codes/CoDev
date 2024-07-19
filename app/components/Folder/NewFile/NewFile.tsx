@@ -47,13 +47,16 @@ const NewFile = ({setNewFile}:NewFileProps) => {
       setfileType('python');
     }
     else if(ext === 'ts'){
-      setfileType('typescript');
+      setfileType('javascript');
     }
     else if(ext === 'cpp'){
       setfileType('cpp')
     }
     else if(ext === 'go'){
       setfileType('go');
+    }
+    else if(ext === 'c'){
+      setfileType('c');
     }
     else {
       setfileType('text');

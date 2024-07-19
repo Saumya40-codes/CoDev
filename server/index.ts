@@ -2,13 +2,13 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import fs from 'fs';
-import { exec } from 'child_process';
+import { exec, execSync } from 'child_process';
 import { v4 as uuidv4 } from 'uuid';
 import os from 'os';
-import { langs } from './controllers/codeConfig';
-import { ext } from './controllers/codeConfig';
+import { languageConfigs } from './controllers/codeConfig';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
 
 const app = express();
 app.use(express.json());
@@ -79,18 +79,19 @@ io.on('connection', (socket) => {
     });
 });
 
-app.post('/execute', async (req, res) => {
-    try{
+app.post('/execute', (req, res) => {
+    try {
         const { code, lang } = req.body;
-
-        if(!(lang in langs)){
-            return 'Language not supported';
+    
+        if (!(lang in languageConfigs)) {
+            return res.status(400).json({ error: 'Language not supported' });
         }
-
+    
+        const { ext, cmd } = languageConfigs[lang as keyof typeof languageConfigs];
         let id = uuidv4();
         
         fs.mkdirSync(`codes/${id}`);
-        fs.writeFileSync(`codes/${id}/script.${ext[lang as keyof typeof ext]}`, code);
+        fs.writeFileSync(`codes/${id}/script.${ext}`, code);
 
         const sys = os.platform();
 
@@ -99,36 +100,42 @@ app.post('/execute', async (req, res) => {
         if(lang === 'javascript'){
             command = `node codes/${id}/script.js`; // as node is already installed in the local for application to run
         }
-        else if(sys === 'win32'){
-            command = `docker run --rm -v %cd%/codes/${id}:/usr/src/app ${langs[lang as keyof typeof langs]}`;
-        }
         else{
-            command = `docker run --rm -v $(pwd)/codes/${id}:/usr/src/app ${langs[lang as keyof typeof langs]}`;
+            let filepath = '';
+
+            if(sys === 'win32'){
+                filepath = `%cd%/codes/${id}`
+            }
+            else{
+                filepath = `$(pwd)/codes/${id}`
+            }
+
+            const filename = `script.${ext}`;
+        
+            command = `docker run --rm -v ${filepath}:/app/code saumyashah40/codev:v2 ${cmd} /app/code/${filename}`;
         }
-
+    
         exec(command, (error, stdout, stderr) => {
-
-            fs.rm(`codes/${id}`, { recursive: true }, (err) => {
-                if (err) {
-                    console.error(err);
-                }
-            });
-
-            if (error) {
-                return res.status(200).json({ output: error.message });
+        fs.rm(`codes/${id}`, { recursive: true }, (err) => {
+            if (err) {
+                console.error(err);
             }
-            if (stderr) {
-                return res.status(200).json({ output: stderr });
-            }
-            
-            return res.status(200).json({ output: stdout });
         });
-    }
-    catch(err){
-        console.log(err);
+
+        if (error) {
+            return res.status(200).json({ output: error.message });
+        }
+        if (stderr) {
+            return res.status(200).json({ output: stderr });
+        }
+        return res.status(200).json({ output: stdout });
+        });
+    
+        } catch (err) {
+        console.error(err);
         res.status(500).send('Internal Server Error');
-    }
-});
+        }
+    });
 
 const PORT = process.env.PORT || 5000;
 
