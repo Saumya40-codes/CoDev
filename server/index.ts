@@ -128,12 +128,12 @@ app.post('/execute', (req, res) => {
         if (stderr) {
             return res.status(200).json({ output: stderr });
         }
-        return res.status(200).json({ output: stdout });
+            return res.status(200).json({ output: stdout });
         });
     
         } catch (err) {
-        console.error(err);
-        res.status(500).send('Internal Server Error');
+            console.error(err);
+            res.status(500).send('Internal Server Error');
         }
     });
 
