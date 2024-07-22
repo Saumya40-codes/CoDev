@@ -57,6 +57,10 @@
 
 @media screen and (max-width: 800px){
 
+    .contentWrapper{
+        padding-top: 100px;
+    }
+    
     .mainContent{
         width: 100%;
     }
