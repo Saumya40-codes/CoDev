@@ -23,7 +23,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: ['http://localhost:3000', 'https://co-dev-sigma.vercel.app', 'https://vercel.com/saumya40codes-projects/co-dev/CkS4NmjgZS6WMtQBUztCexE8UihE', 'https://co-dev-saumya40codes-projects.vercel.app/', 'https://co-dev-git-master-saumya40codes-projects.vercel.app/'],
+        origin: ['http://localhost:3000', 'https://co-dev-sigma.vercel.app'],
         methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     }
 });
@@ -128,12 +128,12 @@ app.post('/execute', (req, res) => {
         if (stderr) {
             return res.status(200).json({ output: stderr });
         }
-        return res.status(200).json({ output: stdout });
+            return res.status(200).json({ output: stdout });
         });
     
         } catch (err) {
-        console.error(err);
-        res.status(500).send('Internal Server Error');
+            console.error(err);
+            res.status(500).send('Internal Server Error');
         }
     });
 
