@@ -3,13 +3,16 @@
 import React from 'react'
 import styles from './contents.module.css'
 import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
+const VideoSection = dynamic(() => import('../VideoSection/VideoSection'), { ssr: false })
 
 const Contents = () => {
 
   const router = useRouter();
 
   return (
-    <div>
+    <div className={styles.contentWrapper}>
+      <div className={styles.content}>
         <div className={styles.mainContent}>
             <span>
                 Do your coding work all <span className={styles.diff}>Together</span>
@@ -18,6 +21,8 @@ const Contents = () => {
                 Get Started
             </button>
         </div>
+        <VideoSection />
+      </div>
     </div>
   )
 }
