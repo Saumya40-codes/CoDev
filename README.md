@@ -16,6 +16,14 @@ The deployed version supports JavaScript/TypeScript code execution only. Other l
 
 ## 🎥 Demo
 
+** Get Started **
+
+
+
+https://github.com/user-attachments/assets/d1f28a03-1e03-4352-a6ea-e0cc5bb530f8
+
+
+
 1. **Create a Project**
    [View Demo](https://github.com/Saumya40-codes/CoDev/assets/115284013/4fd9487c-2fe7-46a7-8dc3-42957d2abeab)
 
