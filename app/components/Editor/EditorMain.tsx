@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useEffect, useCallback } from 'react'
-import Editor from '@monaco-editor/react';
+import React, { useEffect, useCallback, useRef, useState } from 'react'
+import Editor, { OnMount } from '@monaco-editor/react';
 import { useAppSelector, useAppDispatch } from '@/app/lib/redux/hooks';
 import logo from '../../../styles/images/logo.png';
 import styles from './editor.module.css';
@@ -12,6 +12,7 @@ import { editor } from 'monaco-editor';
 import socket from '@/app/lib/socket/socket';
 import { Session } from '@/app/lib/types/types';
 import { useSession } from 'next-auth/react';
+import debounce from 'lodash/debounce';
 
 const EditorMain = () => {    
   const currentFile = useAppSelector((state) => state?.file.currentFile);
@@ -23,7 +24,11 @@ const EditorMain = () => {
   const dispatch = useAppDispatch();
   const {data: session} = useSession() as {data: Session | undefined};
 
-  const handleEditorDidMount = (editor: any, monaco: any) => {
+  const [version, setVersion] = useState(0);
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
+
+  const handleEditorDidMount: OnMount = (editor: any, monaco: any) => {
+    editorRef.current = editor;
     monaco.editor.defineTheme('my-theme', {
       base: 'vs-dark',
       inherit: true,
@@ -55,20 +60,35 @@ const EditorMain = () => {
     editor.focus();
   }
 
-  const emitCodeChange = useCallback((value: string) => {
+  const emitCodeChange = useCallback(debounce((value: string, cursorPosition: number) => {
     socket.emit('code-changed', {
       fileId: currentFile,
       projectId,
       value,
+      cursorPosition,
+      version: version + 1,
       name: session?.user?.name
     });
-  }, [currentFile, projectId, session?.user?.name]);
+    setVersion(v => v + 1);
+  }, 300), [currentFile, projectId, session?.user?.name, version]);
 
   useEffect(() => {
-    const handleCodeChanged = (value: { fileId: string; value: string; name: string }) => {
-      dispatch(setCurrentCode({ fileId: value.fileId, code: value.value }));
-      dispatch(setFileUser({ name: value.name, fileId: value.fileId }));
-      dispatch(setFileSaved({ fileId: value.fileId, saved: false }));
+    const handleCodeChanged = (value: { fileId: string; value: string; name: string; version: number; cursorPosition: number }) => {
+      if (value.fileId === currentFile && value.version > version) {
+        dispatch(setCurrentCode({ fileId: value.fileId, code: value.value }));
+        dispatch(setFileUser({ name: value.name, fileId: value.fileId }));
+        dispatch(setFileSaved({ fileId: value.fileId, saved: false }));
+        setVersion(value.version);
+
+        if (editorRef.current) {
+          const currentPosition = editorRef.current.getPosition();
+          editorRef.current.setValue(value.value);
+          if (currentPosition) {
+            editorRef.current.setPosition(currentPosition);
+            editorRef.current.revealPositionInCenter(currentPosition);
+          }
+        }
+      }
     };
 
     socket.on('code-changed', handleCodeChanged);
@@ -80,14 +100,15 @@ const EditorMain = () => {
       socket.off('code-changed', handleCodeChanged);
       socket.off('code-saved');
     }
-  }, [dispatch, projectId]);
+  }, [dispatch, currentFile, version]);
 
   const handleCodeChange = (value: string | undefined, event: editor.IModelContentChangedEvent) => {
-    if (value !== undefined) {
+    if (value !== undefined && editorRef.current) {
+      const cursorPosition = editorRef.current.getPosition();
       dispatch(setCurrentCode({fileId: currentFile, code: value}));
       dispatch(setFileUser({name: session?.user?.name, fileId: currentFile}));
       dispatch(setFileSaved({fileId: currentFile, saved: false}));
-      emitCodeChange(value);
+      emitCodeChange(value, cursorPosition?.lineNumber || 0);
     }
   }
 
@@ -118,30 +139,29 @@ const EditorMain = () => {
 
   return (
     <div style={{width:"100%", resize:'both', overflow:'auto'}} onKeyDown={handleCtrlQ}>
-      {shareId && (<div className={styles.shareIdBlock}>
-        {currentFile && fileUserId[currentFile] && (
-          <span>
-            <span className={styles.editingUser}>{fileUserId[currentFile]} </span>
-            is Editing...</span>
-        )} 
-      </div>)
-      }
+      {shareId && (
+        <div className={styles.shareIdBlock}>
+          {currentFile && fileUserId[currentFile] && (
+            <span>
+              <span className={styles.editingUser}>{fileUserId[currentFile]} </span>
+              is Editing...
+            </span>
+          )} 
+        </div>
+      )}
       {currentFile ? (
-      <Editor
-        height="100vh"
-        width="100%"
-        language={currentLanguage}
-        onMount={handleEditorDidMount}
-        onChange={handleCodeChange}
-        value={currentCode[currentFile]}
-        theme="my-theme"
-        options={
-          {
+        <Editor
+          height="100vh"
+          width="100%"
+          language={currentLanguage}
+          onMount={handleEditorDidMount}
+          onChange={handleCodeChange}
+          value={currentCode[currentFile]}
+          theme="my-theme"
+          options={{
             fontSize: 16,
             wordWrap: 'on',
-            minimap: {
-              enabled: false
-            },
+            minimap: { enabled: false },
             scrollbar: {
               vertical: 'hidden',
               horizontal: 'auto',
@@ -152,9 +172,9 @@ const EditorMain = () => {
               horizontalScrollbarSize: 10,
               arrowSize: 30
             }
-          }
-        }
-      />): (
+          }}
+        />
+      ) : (
         <div className={styles.imgBlock}>
           <img src={logo.src} alt="Logo" className={styles.logoImg}/>
           <span className={styles.logoText}>Get started by creating a new file <EmailIcon /> </span>
