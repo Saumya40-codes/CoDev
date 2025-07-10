@@ -4,12 +4,14 @@ interface ProjectProps{
     projectId: string;
     shareId?: string | null;
     shareLink?: string | null;
+    projectName: string;
 }
 
 const initialState:ProjectProps  = {
     projectId: '',
     shareId: null,
-    shareLink: null
+    shareLink: null,
+    projectName: '',
 }
 
 export const projectSlice = createSlice({
@@ -24,9 +26,12 @@ export const projectSlice = createSlice({
         },
         setShareIdLink : (state, action) => {
             state.shareLink = action.payload;
-        }
+        },
+        setProjectName : (state, action) => {
+            state.projectName = action.payload.projectName;
+        },
     }
 });
 
-export const { setProjectId, setShareId, setShareIdLink } = projectSlice.actions;
+export const { setProjectId, setShareId, setShareIdLink, setProjectName } = projectSlice.actions;
 export default projectSlice.reducer;

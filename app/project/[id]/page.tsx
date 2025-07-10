@@ -8,7 +8,7 @@ import EditorMain from '@/app/components/Editor/EditorMain'
 import Terminal from '@/app/components/Terminal/Terminal'
 import { useAppDispatch, useAppSelector } from '@/app/lib/redux/hooks'
 import socket from '@/app/lib/socket/socket'
-import { setShareId, setShareIdLink, setProjectId } from '@/app/lib/redux/features/ProjectSlice'
+import { setShareId, setShareIdLink, setProjectId, setProjectName } from '@/app/lib/redux/features/ProjectSlice'
 import { setFileUser } from '@/app/lib/redux/features/EditingSlice'
 import { setFileSaved } from '@/app/lib/redux/features/FileSlice'
 import { useSession } from 'next-auth/react'
@@ -17,6 +17,7 @@ import { Session } from '@/app/lib/types/types'
 const Project = ({ params }: { params: { id: string } }) => {
   const shareId = useAppSelector((state) => state.project.shareId);
   const projectId = useAppSelector((state) => state.project.projectId);
+  const projectName = useAppSelector((state) => state.project.projectName);
   const dispatch = useAppDispatch();
   const { data: session } = useSession() as { data: Session | undefined };
   const userId = session?.user?.id;
@@ -118,6 +119,7 @@ const Project = ({ params }: { params: { id: string } }) => {
       });
 
       dispatch(setProjectId({ projectId }));
+      dispatch(setProjectName({ projectName }));
       dispatch(setShareIdLink(`${window.location.href}?shareId=${shareId}`));
 
       if (shareId) {
@@ -134,6 +136,7 @@ const Project = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     dispatch(setProjectId({ projectId: params.id }));
+    dispatch(setProjectName({ projectName }));
   }, [dispatch, params.id]);
 
   return (

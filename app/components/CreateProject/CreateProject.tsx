@@ -4,7 +4,7 @@ import { CloseIcon } from '@chakra-ui/icons'
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useAppDispatch } from '@/app/lib/redux/hooks';
-import { setShareId, setShareIdLink } from '@/app/lib/redux/features/ProjectSlice';
+import { setShareId, setShareIdLink, setProjectName } from '@/app/lib/redux/features/ProjectSlice';
 import { setCurrentFile } from '@/app/lib/redux/features/FileSlice';
 import { Session } from '@/app/lib/types/types'
 
@@ -14,7 +14,7 @@ const CreateProject = ({setCreateProject}:{setCreateProject:React.Dispatch<React
     const userId = session?.user?.id; 
     const router = useRouter();
 
-    const [projectName, setProjectName] = useState<string>('');
+    const [projectName, setProjName] = useState<string>('');
 
     const handleCreateProject = async() => {
         try{
@@ -35,6 +35,7 @@ const CreateProject = ({setCreateProject}:{setCreateProject:React.Dispatch<React
             dispatch(setShareId(null));
             dispatch(setCurrentFile(null))
             dispatch(setShareIdLink(null));
+            dispatch(setProjectName(projectName))
             const newProjUrl = `/project/${data.project.id}`;
             router.push(newProjUrl);
         }
@@ -53,7 +54,7 @@ const CreateProject = ({setCreateProject}:{setCreateProject:React.Dispatch<React
                 <span>
                     Project Name
                 </span>
-                <input type="text" placeholder="Enter Here..." className={styles.projnewInput} onChange={(e)=>setProjectName(e.target.value)} />
+                <input type="text" placeholder="Enter Here..." className={styles.projnewInput} onChange={(e)=>setProjName(e.target.value)} />
             </div>
             <div className={styles.projnewBtn}>
             <button className={styles.projBtn} onClick={handleCreateProject}>
