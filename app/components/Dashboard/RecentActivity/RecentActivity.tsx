@@ -6,6 +6,8 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Session } from '@/app/lib/types/types';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { setProjectName } from '@/app/lib/redux/features/ProjectSlice';
+import { useAppDispatch } from '@/app/lib/redux/hooks';
 
 interface Project {
     id: string;
@@ -22,6 +24,7 @@ interface DataProps {
 const ITEMS_PER_PAGE = 10;
 
 const RecentActivity = () => {
+    const dispatch = useAppDispatch();
     const [mainData, setMainData] = useState<DataProps>();
     const [currentPage, setCurrentPage] = useState(1);
     const { data: session } = useSession() as { data: Session };
@@ -67,7 +70,10 @@ const RecentActivity = () => {
                         <div
                             key={project.id}
                             className={styles.project}
-                            onClick={() => router.push(`/project/${project.id}${project.shareId ? `?shareId=${project.shareId}` : ''}`)}
+                            onClick={() => {
+                                dispatch(setProjectName({ projectName: project.name }));
+                                router.push(`/project/${project.id}${project.shareId ? `?shareId=${project.shareId}` : ''}`);
+                            }}
                         >
                             <div>
                                 <span>
