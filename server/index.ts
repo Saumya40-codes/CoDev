@@ -237,8 +237,15 @@ io.on('connection', (socket: Socket) => {
     }
   });
 
-  socket.on('disconnect', (reason) => {
-    logger.info(`User disconnected: ${socket.id}, reason: ${reason}`);
+  socket.on('disconnect', () => {
+    const { projectId, userId } = socket.data as Partial<SocketData> ?? {};
+
+    if (projectId && userId) {
+      socket.broadcast.to(projectId).emit('user-left', { userId });
+      logger.info(`User ${userId} disconnected from project ${projectId}`);
+    } else {
+      logger.warn(`Socket disconnected without complete data: ${socket.id}`);
+    }
   });
 
   socket.on('error', (error) => {
