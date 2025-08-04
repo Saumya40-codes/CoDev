@@ -16,7 +16,9 @@ export const EditingSlice = createSlice({
     reducers: {
         setFileUser: (state, action) => {
             const { name, fileId } = action.payload;
-            state.fileUserMap[fileId] = name;
+            if (fileId) {
+                state.fileUserMap[fileId] = name;
+            }
         }
     }
 });

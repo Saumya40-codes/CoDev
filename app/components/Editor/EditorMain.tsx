@@ -274,26 +274,39 @@ const EditorMain = () => {
     }
   }, [dispatch, currentFile, version]);
 
-  // Enhanced code change handler
   const handleCodeChange = (value: string | undefined, event: editor.IModelContentChangedEvent) => {
-    if (value !== undefined && editorRef.current) {
+    if (value !== undefined && editorRef.current && currentFile) {
       const cursorPosition = editorRef.current.getPosition();
-      
+
       dispatch(setCurrentCode({ fileId: currentFile, code: value }));
       dispatch(setFileUser({ name: session?.user?.name, fileId: currentFile }));
       dispatch(setFileSaved({ fileId: currentFile, saved: false }));
-      
+
       setSaveStatus('unsaved');
-      
+
+      if (shareId) {
+        socket.emit('project-state', {
+          projectId,
+          shareId,
+          fileUserMap: {
+            ...fileUserId,
+            [currentFile]: session?.user?.name
+          },
+          fileSaved: {
+            ...fileSaved,
+            [currentFile]: false
+          }
+        });
+      }
+
       // Emit change to other users
       emitCodeChange(value, cursorPosition?.lineNumber || 0);
-      
+
       // Trigger auto-save
       autoSave();
     }
-  }
+  };
 
-  // Enhanced keyboard shortcuts
   const handleKeyDown = async (event: React.KeyboardEvent) => {
     // Ctrl+S or Cmd+S for save
     if ((event.ctrlKey || event.metaKey) && event.key === 's') {
@@ -308,7 +321,6 @@ const EditorMain = () => {
     }
   }
 
-  // Format last saved time
   const formatLastSavedTime = (time: Date) => {
     const now = new Date();
     const diff = now.getTime() - time.getTime();
@@ -319,7 +331,6 @@ const EditorMain = () => {
     return time.toLocaleDateString();
   };
 
-  // Status indicator component
   const StatusIndicator = () => (
     <div className={styles.statusBar}>
       <div className={styles.statusLeft}>
